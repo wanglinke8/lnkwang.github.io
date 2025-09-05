@@ -1,19 +1,233 @@
-[主歌]
-每一次 都在徘徊孤单中坚强
-每一次 就算很受伤也不闪泪光
-我知道 我一直有双隐形的翅膀
-带我飞 飞过绝望
-[主歌]
-每一次 都在徘徊孤单中坚强
-每一次 就算很受伤也不闪泪光
-我知道 我一直有双隐形的翅膀
-带我飞 给我希望
-[副歌]
-我终于看到 所有梦想都开花
-执着的勇敢的不害怕
-我终于翱翔 用心凝望不害怕
-哪里会有风 就飞多远吧
-[副歌]
-隐形的翅膀 带我飞 给我希望
-我终于看到 所有梦想都开花
-隐形的翅膀 带我飞 飞向远方
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐形的翅膀 - 张韶涵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        header {
+            background: linear-gradient(120deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .music-note {
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.7;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        .note1 { top: 20px; left: 15%; animation-delay: 0s; }
+        .note2 { top: 30px; right: 15%; animation-delay: 2s; }
+        .note3 { bottom: 25px; left: 20%; animation-delay: 1s; }
+        .note4 { bottom: 20px; right: 20%; animation-delay: 3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(10deg); }
+        }
+        
+        .instructions {
+            background: #eef2f7;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px dashed #d1d9e6;
+        }
+        
+        .instructions p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: #555;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            background: #fff9db;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .lyrics-container {
+            padding: 40px;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .lyrics {
+            font-size: 1.3rem;
+            line-height: 2.2;
+            text-align: center;
+            color: white; /* 隐形效果：白色文字 */
+            background: white; /* 白色背景 */
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .lyrics:hover {
+            background: #f8f9ff;
+            color: #2c3e50;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .lyrics:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            text-align: center;
+            color: #6a11cb;
+            font-size: 1.4rem;
+            margin: 25px 0 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9ff;
+            color: #666;
+            font-size: 0.95rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .hint {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #777;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        @media (max-width: 600px) {
+            .lyrics-container {
+                padding: 25px 20px;
+            }
+            
+            .lyrics {
+                font-size: 1.1rem;
+                padding: 20px 15px;
+                line-height: 2;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="music-note note1">♪</div>
+            <div class="music-note note2">♫</div>
+            <div class="music-note note3">♩</div>
+            <div class="music-note note4">♬</div>
+            <h1>隐形的翅膀</h1>
+            <p class="subtitle">张韶涵 · 经典励志歌曲 | 2006年发行</p>
+        </header>
+        
+        <div class="instructions">
+            <p>歌词已设置为<span class="highlight">隐形效果</span>，尝试<span class="highlight">鼠标悬停</span>或<span class="highlight">选中文字</span>查看歌词内容</p>
+            <p class="hint">→ 将鼠标移到下方区域，歌词将逐渐显现 ←</p>
+        </div>
+        
+        <div class="lyrics-container">
+            <div class="lyrics">
+                <div class="section-title">[主歌]</div>
+                每一次 都在徘徊孤单中坚强<br>
+                每一次 就算很受伤也不闪泪光<br>
+                我知道 我一直有双隐形的翅膀<br>
+                带我飞 飞过绝望
+                
+                <div class="section-title">[主歌]</div>
+                每一次 都在徘徊孤单中坚强<br>
+                每一次 就算很受伤也不闪泪光<br>
+                我知道 我一直有双隐形的翅膀<br>
+                带我飞 给我希望
+                
+                <div class="section-title">[副歌]</div>
+                我终于看到 所有梦想都开花<br>
+                执着的勇敢的不害怕<br>
+                我终于翱翔 用心凝望不害怕<br>
+                哪里会有风 就飞多远吧
+                
+                <div class="section-title">[副歌]</div>
+                隐形的翅膀 带我飞 给我希望<br>
+                我终于看到 所有梦想都开花<br>
+                隐形的翅膀 带我飞 飞向远方
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 经典音乐收藏 | 《隐形的翅膀》歌词展示</p>
+            <p>提示：歌词默认隐形，悬停或选中即可查看 | 点击任意位置可复制歌词</p>
+        </footer>
+    </div>
+
+    <script>
+        document.querySelector('.lyrics').addEventListener('click', function() {
+            const text = this.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('歌词已复制到剪贴板！');
+            });
+        });
+    </script>
+</body>
+</html>
