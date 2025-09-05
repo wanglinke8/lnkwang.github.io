@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -139,7 +138,7 @@
             font-size: 1.6rem;
             line-height: 2.4;
             text-align: center;
-            color: #1e293b; /* 已移除隐形效果 - 文字颜色改为深色 */
+            color: #1e293b;
             background: #f8fafc;
             border-radius: 20px;
             padding: 45px;
@@ -271,6 +270,137 @@
             box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
         }
         
+        /* 新增：音频播放器样式 - 专为WAV优化 */
+        .audio-player {
+            padding: 25px 40px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .player-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .player-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .audio-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #1e40af;
+        }
+        
+        .audio-title i {
+            font-size: 1.8rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        audio {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #2c5282;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .control-btn:hover {
+            background: #4361ee;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.5);
+        }
+        
+        .audio-info {
+            margin-top: 15px;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+        
+        /* WAV文件加载状态指示器 */
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            background: #ebf4ff;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #2c5282;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(67, 97, 238, 0.3);
+            border-radius: 50%;
+            border-top-color: #4361ee;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         footer {
             text-align: center;
             padding: 30px;
@@ -318,6 +448,15 @@
             .btn {
                 width: 100%;
                 max-width: 300px;
+            }
+            
+            /* 适配移动端音频播放器 */
+            .audio-player {
+                padding: 20px 15px;
+            }
+            
+            .player-container {
+                padding: 15px;
             }
         }
         
@@ -473,7 +612,7 @@
                     </div>
                     
                     <div class="verse">
-                        我知道<br>
+                        我 know<br>
                         我一直有双隐形的翅膀
                     </div>
                     
@@ -517,6 +656,56 @@
                         让自己想象
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- 专为WAV格式优化的音频播放器 -->
+        <div class="audio-player">
+            <div class="player-container">
+                <div class="audio-title">
+                    <i class="fas fa-music"></i>
+                    <h2>歌曲试听 (WAV格式)</h2>
+                </div>
+                
+                <!-- WAV格式提示 -->
+                <div class="audio-info" style="background: #fff9db; padding: 12px; border-radius: 10px; margin-bottom: 15px;">
+                    <i class="fas fa-info-circle" style="color: #d97706;"></i> 
+                    WAV格式为无损音质，文件较大，首次加载可能需要较长时间
+                </div>
+                
+                <!-- WAV文件加载状态指示器 -->
+                <div class="loading-indicator" id="loadingIndicator">
+                    <span class="loading-spinner"></span> 正在加载高质量WAV音频文件，请稍候...
+                </div>
+                
+                <!-- 音频播放器 - 专为WAV格式 -->
+                <audio id="songPlayer" controls>
+                    <source src="audio/华晨宇-烟火里的尘埃.wav" type="audio/wav">
+                    您的浏览器不支持WAV格式音频播放，请尝试更新浏览器
+                </audio>
+                
+                <div class="audio-controls">
+                    <button class="control-btn" onclick="document.getElementById('songPlayer').currentTime -= 10">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button class="control-btn" onclick="document.getElementById('songPlayer').playbackRate = 0.8">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                    <button class="control-btn" onclick="document.getElementById('songPlayer').playbackRate = 1.0">
+                        1x
+                    </button>
+                    <button class="control-btn" onclick="document.getElementById('songPlayer').playbackRate = 1.2">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                </div>
+                
+                <div class="audio-info">
+                    <p>提示：WAV格式为无损音频，音质最佳但文件较大</p>
+                </div>
+                
+                <a href="audio/隐形的翅膀.wav" download="隐形的翅膀-张韶涵.wav" class="download-btn">
+                    <i class="fas fa-download"></i> 下载WAV无损音质
+                </a>
             </div>
         </div>
         
@@ -612,6 +801,35 @@
                 }, 2000);
             });
         }
+        
+        // WAV文件加载状态管理
+        document.addEventListener('DOMContentLoaded', function() {
+            const player = document.getElementById('songPlayer');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            if (player && loadingIndicator) {
+                // 显示加载指示器
+                player.addEventListener('loadstart', function() {
+                    loadingIndicator.style.display = 'block';
+                });
+                
+                // 隐藏加载指示器
+                player.addEventListener('canplay', function() {
+                    loadingIndicator.style.display = 'none';
+                });
+                
+                // 处理加载错误
+                player.addEventListener('error', function() {
+                    loadingIndicator.style.display = 'block';
+                    loadingIndicator.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #e53e3e;"></i> 无法加载WAV文件，请检查文件路径或尝试刷新页面';
+                    loadingIndicator.style.background = '#fff5f5';
+                    loadingIndicator.style.color = '#c53030';
+                });
+                
+                // 防止自动播放
+                player.pause();
+            }
+        });
     </script>
 </body>
 </html>
