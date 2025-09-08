@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>王琳科的私人网站</title>
+    <title>Particle Heart Animation</title>
     <style>
         * {
             margin: 0;
@@ -45,8 +45,8 @@
                 this.y = y + (Math.random() - 0.5) * 100;
                 this.targetX = targetX;
                 this.targetY = targetY;
-                this.size = Math.random() * 4 + 2; // ✅ 更大尺寸
-                this.opacity = Math.random() * 0.5 + 0.5; // ✅ 更高不透明度
+                this.size = Math.random() * 1.5 + 0.5;
+                this.opacity = Math.random() * 0.5 + 0.5;
                 this.speed = 0.02 + Math.random() * 0.03;
                 this.angle = Math.random() * Math.PI * 2;
                 this.drift = (Math.random() - 0.5) * 2;
@@ -79,7 +79,6 @@
                 ctx.save();
                 ctx.globalAlpha = this.currentOpacity;
 
-                // ✅ 锐化渐变：光效更集中
                 const gradient = ctx.createRadialGradient(
                     this.x, this.y, 0,
                     this.x, this.y, this.currentSize * 1.2
@@ -93,11 +92,10 @@
                 ctx.arc(this.x, this.y, this.currentSize, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // ✅ 更大更亮的中心点，增强清晰度
                 ctx.globalAlpha = this.currentOpacity * 0.9;
-                ctx.fillStyle = '#ffffff'; // 纯白高光
+                ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.currentSize * 0.5, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.currentSize * 0.7, 0, Math.PI * 2);
                 ctx.fill();
                 
                 ctx.restore();
@@ -107,7 +105,7 @@
         // 生成心形路径点
         function generateHeartPoints(centerX, centerY, scale = 1) {
             const points = [];
-            const numPoints = 800;
+            const numPoints = 1500;
             
             for (let i = 0; i < numPoints; i++) {
                 const t = (i / numPoints) * Math.PI * 2;
@@ -116,7 +114,7 @@
                 points.push({ x: centerX + x * scale, y: centerY + y * scale });
             }
             
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 500; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const distance = (Math.random() * 100 + 50) * scale;
                 const x = centerX + Math.cos(angle) * distance;
@@ -131,6 +129,9 @@
         let particles = [];
         let mouseInfluence = 1;
         let lastMouseMove = Date.now();
+        let isMousePressed = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
         
         function initParticles() {
             const centerX = canvas.width / 2;
@@ -151,26 +152,106 @@
             });
         }
         
-        // 鼠标交互
+        // 鼠标交互 - 改为滑动模式
+        canvas.addEventListener('mousedown', (e) => {
+            isMousePressed = true;
+            const rect = canvas.getBoundingClientRect();
+            lastMouseX = e.clientX - rect.left;
+            lastMouseY = e.clientY - rect.top;
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isMousePressed = false;
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isMousePressed = false;
+        });
+        
         canvas.addEventListener('mousemove', (e) => {
             lastMouseMove = Date.now();
             mouseInfluence = Math.min(mouseInfluence + 0.1, 2);
+            
+            if (isMousePressed) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                // 计算鼠标移动距离
+                const deltaX = mouseX - lastMouseX;
+                const deltaY = mouseY - lastMouseY;
+                const moveDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                
+                // 只有在移动足够距离时才生成粒子
+                if (moveDistance > 5) {
+                    mouseInfluence = 3;
+                    
+                    // 根据移动速度调整粒子数量
+                    const particleCount = Math.min(Math.floor(moveDistance / 10), 15);
+                    
+                    for (let i = 0; i < particleCount; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = Math.random() * 50 + 20;
+                        const targetX = mouseX + Math.cos(angle) * distance;
+                        const targetY = mouseY + Math.sin(angle) * distance;
+                        
+                        particles.push(new Particle(mouseX, mouseY, targetX, targetY, true));
+                    }
+                    
+                    // 更新上一次鼠标位置
+                    lastMouseX = mouseX;
+                    lastMouseY = mouseY;
+                }
+            }
         });
         
-        canvas.addEventListener('click', (e) => {
-            mouseInfluence = 3;
-            
+        // 触摸设备支持
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isMousePressed = true;
             const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+            const touch = e.touches[0];
+            lastMouseX = touch.clientX - rect.left;
+            lastMouseY = touch.clientY - rect.top;
+        });
+        
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            isMousePressed = false;
+        });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            lastMouseMove = Date.now();
+            mouseInfluence = Math.min(mouseInfluence + 0.1, 2);
             
-            for (let i = 0; i < 30; i++) {
-                const angle = (Math.PI * 2 / 30) * i;
-                const distance = Math.random() * 100 + 50;
-                const x = mouseX + Math.cos(angle) * distance;
-                const y = mouseY + Math.sin(angle) * distance;
+            if (isMousePressed) {
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const mouseX = touch.clientX - rect.left;
+                const mouseY = touch.clientY - rect.top;
                 
-                particles.push(new Particle(mouseX, mouseY, x, y, true));
+                const deltaX = mouseX - lastMouseX;
+                const deltaY = mouseY - lastMouseY;
+                const moveDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+                
+                if (moveDistance > 5) {
+                    mouseInfluence = 3;
+                    
+                    const particleCount = Math.min(Math.floor(moveDistance / 10), 15);
+                    
+                    for (let i = 0; i < particleCount; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = Math.random() * 50 + 20;
+                        const targetX = mouseX + Math.cos(angle) * distance;
+                        const targetY = mouseY + Math.sin(angle) * distance;
+                        
+                        particles.push(new Particle(mouseX, mouseY, targetX, targetY, true));
+                    }
+                    
+                    lastMouseX = mouseX;
+                    lastMouseY = mouseY;
+                }
             }
         });
         
@@ -182,14 +263,11 @@
                 mouseInfluence = Math.max(mouseInfluence * 0.99, 1);
             }
             
-            // ✅ 关闭图像平滑（轻微提升清晰度）
             ctx.imageSmoothingEnabled = false;
 
-            // 清空画布
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // 更新和绘制粒子
             particles = particles.filter(particle => {
                 particle.update(currentTime, mouseInfluence);
                 if (!particle.isDead) {
@@ -199,16 +277,15 @@
                 return false;
             });
             
-            // 背景星星（保持原样）
-            if (Math.random() < 0.3) {
+            if (Math.random() < 0.1) {
                 ctx.save();
-                ctx.globalAlpha = Math.random() * 0.5;
+                ctx.globalAlpha = Math.random() * 0.3;
                 ctx.fillStyle = '#00ffaa';
                 ctx.beginPath();
                 ctx.arc(
                     Math.random() * canvas.width,
                     Math.random() * canvas.height,
-                    Math.random() * 2,
+                    Math.random() * 1.5,
                     0,
                     Math.PI * 2
                 );
