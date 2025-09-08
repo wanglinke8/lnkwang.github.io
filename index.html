@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>青绿粒子心跳</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>粒子心形</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background-color: #000;
       overflow: hidden;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     canvas {
       display: block;
@@ -17,13 +20,13 @@
   </style>
 </head>
 <body>
-  <canvas id="heartCanvas"></canvas>
+  <canvas id="canvas"></canvas>
 
   <script>
-    const canvas = document.getElementById('heartCanvas');
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    // 自适应画布
+    // 设置 canvas 尺寸
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -31,87 +34,69 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // 粒子类
-    class Particle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.size = Math.random() * 1.5 + 0.5; // 小点
-        this.color = '#00ffff'; // 青绿色
-        this.vx = (Math.random() - 0.5) * 0.1; // 微小随机速度
-        this.vy = (Math.random() - 0.5) * 0.1;
-      }
+    // 心形参数
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.4;
 
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        // 缓慢回归中心（模拟“引力”）
-        const dx = this.x - canvas.width / 2;
-        const dy = this.y - canvas.height / 2;
-        this.vx -= dx * 0.0003;
-        this.vy -= dy * 0.0003;
-      }
+    // 粒子数量
+    const particleCount = 5000;
+    const particles = [];
 
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
+    // 随机生成粒子
+    for (let i = 0; i < particleCount; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * radius * 1.2;
+      const x = centerX + Math.cos(angle) * distance;
+      const y = centerY + Math.sin(angle) * distance;
+
+      // 心形方程：r = a(1 - sin(θ))，但这里我们用变形处理
+      // 用更直观的贝塞尔或参数化心形
+      const heartShape = (t) => ({
+        x: 16 * Math.pow(Math.sin(t), 3),
+        y: 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)
+      });
+
+      // 生成在心形周围的点
+      const t = Math.random() * Math.PI * 2;
+      const point = heartShape(t);
+      const scale = 1 + Math.random() * 0.5; // 大小变化
+      const px = centerX + point.x * radius * scale;
+      const py = centerY + point.y * radius * scale;
+
+      // 添加随机偏移，模拟粒子感
+      const offsetX = (Math.random() - 0.5) * radius * 0.4;
+      const offsetY = (Math.random() - 0.5) * radius * 0.4;
+
+      particles.push({
+        x: px + offsetX,
+        y: py + offsetY,
+        size: Math.random() * 2 + 0.5,
+        opacity: Math.random() * 0.7 + 0.3,
+        color: '#00ffcc' // 青绿色
+      });
     }
-
-    // 生成心形粒子（基于参数方程 + 随机偏移）
-    function generateHeartParticles(scale) {
-      const particles = [];
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const size = Math.min(canvas.width, canvas.height) / 2; // 占1/2屏幕
-
-      // 用极坐标采样心形轮廓
-      for (let i = 0; i < 1500; i++) {
-        const t = (i / 1500) * Math.PI * 2;
-        const x = 16 * Math.sin(t) ** 3;
-        const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-
-        // 缩放和位置
-        const px = centerX + x * scale * size / 20;
-        const py = centerY + y * scale * size / 20;
-
-        // 添加一些“外围飞散”粒子
-        if (Math.random() < 0.3) {
-          const angle = Math.random() * Math.PI * 2;
-          const dist = Math.random() * 50;
-          const offsetX = Math.cos(angle) * dist;
-          const offsetY = Math.sin(angle) * dist;
-          particles.push(new Particle(px + offsetX, py + offsetY));
-        } else {
-          particles.push(new Particle(px, py));
-        }
-      }
-
-      return particles;
-    }
-
-    let scale = 1;
-    let growing = true;
 
     // 动画循环
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 慢速跳动
-      if (growing) {
-        scale += 0.005;
-        if (scale > 1.1) growing = false;
-      } else {
-        scale -= 0.005;
-        if (scale < 0.9) growing = true;
-      }
+      particles.forEach(particle => {
+        // 轻微抖动
+        const dx = (Math.random() - 0.5) * 0.5;
+        const dy = (Math.random() - 0.5) * 0.5;
 
-      const particles = generateHeartParticles(scale);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
+        ctx.fillStyle = particle.color;
+        ctx.globalAlpha = particle.opacity;
+        ctx.beginPath();
+        ctx.arc(
+          particle.x + dx,
+          particle.y + dy,
+          particle.size,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
       });
 
       requestAnimationFrame(animate);
