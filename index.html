@@ -372,8 +372,82 @@
         }
     }
 
-    function openGames(){
-        alert('🎮 游戏乐园即将开启！');
+    // 修改后的游戏打开函数 - 根据要求修改
+    function openGames() {
+        // 检测是否为移动设备
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isAndroid = /Android/.test(navigator.userAgent);
+
+        // 王者荣耀官网 URL
+        const webUrl = 'https://pvp.qq.com/';
+
+        if (isMobile) {
+            // 移动端逻辑：尝试打开王者荣耀APP
+            let appOpened = false;
+
+            // 设置一个时间戳，用于检测是否成功打开了APP
+            const beforeTime = Date.now();
+
+            // 监听页面可见性变化，如果用户离开页面说明APP可能已打开
+            const handleVisibilityChange = () => {
+                if (document.hidden) {
+                    appOpened = true;
+                }
+            };
+
+            // 监听窗口失焦事件（用户可能切换到了APP）
+            const handleBlur = () => {
+                appOpened = true;
+            };
+
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            window.addEventListener('blur', handleBlur);
+
+            try {
+                // 尝试使用Intent或Scheme打开APP
+                if (isIOS) {
+                    // iOS系统的王者荣耀URL Scheme (根据网络资料推测，可能需要官方确认)
+                    // 如果 scheme 不准确，请查找官方文档
+                    const iosScheme = 'tencentlaunchpro://'; // 或者可能是其他，如 'gamecenter://'
+                    window.location.href = iosScheme;
+                } else if (isAndroid) {
+                    // Android系统使用Intent URL 打开王者荣耀APP
+                    // 包名 'com.tencent.tmgp.sgame' 是王者荣耀的官方包名
+                    const androidIntent = 'intent://com.tencent.tmgp.sgame/#Intent;scheme=;package=com.tencent.tmgp.sgame;end';
+                    window.location.href = androidIntent;
+
+                    // 备用方案：直接使用APP的URL Scheme (如果Intent方式不奏效)
+                    setTimeout(() => {
+                        if (!appOpened) {
+                            window.location.href = 'tmgp://com.tencent.tmgp.sgame'; // 另一个可能的Scheme
+                        }
+                    }, 500); // 短一点的延迟
+                }
+
+                // 设置超时检测，如果APP未打开则跳转到网页版
+                setTimeout(() => {
+                    // 清理事件监听器
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    window.removeEventListener('blur', handleBlur);
+
+                    // 如果经过2秒钟用户还在当前页面，且没有触发页面隐藏/失焦事件
+                    // 说明APP可能未安装或打开失败，则跳转到官网
+                    const afterTime = Date.now();
+                    if (!appOpened && (afterTime - beforeTime) >= 1800) {
+                        window.location.href = webUrl;
+                    }
+                }, 2000); // 2秒超时
+
+            } catch (error) {
+                // 如果出现错误，直接跳转到网页版
+                console.log('尝试打开王者荣耀APP失败，跳转到官网');
+                window.location.href = webUrl;
+            }
+        } else {
+            // 桌面端直接跳转到官网
+            window.location.href = webUrl;
+        }
     }
 
     function openContact(){
