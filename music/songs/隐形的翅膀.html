@@ -153,12 +153,10 @@
         .album-art {
             width: 250px;
             height: 250px;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ffa726);
-            border-radius: 20px;
+            border-radius: 50%; /* 改为圆形 */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 5rem;
             margin-bottom: 25px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
             position: relative;
@@ -168,6 +166,14 @@
 
         .album-art.playing {
             animation-play-state: running;
+        }
+
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%; /* 图片也改为圆形 */
+            object-fit: cover;
+            pointer-events: none;
         }
 
         .album-art::before {
@@ -272,30 +278,6 @@
         .control-button:active {
             background: rgba(255, 255, 255, 0.2);
             transform: scale(0.95);
-        }
-
-        .volume-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            padding: 0 20px;
-        }
-
-        .volume-slider {
-            flex: 1;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .volume-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4ecdc4, #44a08d);
-            border-radius: 2px;
-            width: 70%;
         }
 
         .lyrics-section {
@@ -409,7 +391,6 @@
             .album-art {
                 width: 300px;
                 height: 300px;
-                font-size: 6rem;
                 margin-bottom: 30px;
             }
 
@@ -501,8 +482,10 @@
     <div class="main-content">
         <div class="player-section">
             <div class="album-art" id="albumArt">
-                🕊️
+                <img src="张韶涵.jpg" alt="张韶涵 - 隐形的翅膀" draggable="false"
+                     onerror="this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
             </div>
+
 
             <div class="progress-section">
                 <div class="time-info">
@@ -515,16 +498,9 @@
             </div>
 
             <div class="controls">
-                <button class="control-button" onclick="previousSong()">⏮</button>
+                <button class="control-button" onclick="rewind()">⏪</button>
                 <button class="control-button play-button" id="playButton" onclick="togglePlay()">▶</button>
-                <button class="control-button" onclick="nextSong()">⏭</button>
-            </div>
-
-            <div class="volume-section">
-                <span>🔊</span>
-                <div class="volume-slider" onclick="setVolume(event)">
-                    <div class="volume-fill" id="volume"></div>
-                </div>
+                <button class="control-button" onclick="fastForward()">⏩</button>
             </div>
         </div>
 
@@ -679,9 +655,6 @@
             document.getElementById('playButton').textContent = '▶';
             albumArt.classList.remove('playing');
         });
-
-        // 初始化音量显示
-        document.getElementById('volume').style.width = (audio.volume * 100) + '%';
     });
 
     function handleUserScroll() {
@@ -728,6 +701,16 @@
             playButton.textContent = '▶';
             albumArt.classList.remove('playing');
         }
+    }
+
+    // 快退5秒
+    function rewind() {
+        audio.currentTime = Math.max(0, audio.currentTime - 5);
+    }
+
+    // 快进5秒
+    function fastForward() {
+        audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
     }
 
     function updateProgress() {
@@ -799,30 +782,6 @@
         audio.currentTime = percentage * audio.duration;
     }
 
-    function setVolume(event) {
-        const volumeSlider = event.currentTarget;
-        const rect = volumeSlider.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const percentage = clickX / rect.width;
-
-        audio.volume = percentage;
-        document.getElementById('volume').style.width = (percentage * 100) + '%';
-    }
-
-    function previousSong() {
-        audio.currentTime = 0;
-        if (!audio.paused) {
-            audio.play();
-        }
-    }
-
-    function nextSong() {
-        audio.currentTime = 0;
-        if (!audio.paused) {
-            audio.play();
-        }
-    }
-
     function goBack() {
         if (window.history.length > 1) {
             window.history.back();
@@ -839,10 +798,10 @@
                 togglePlay();
                 break;
             case 'ArrowLeft':
-                audio.currentTime = Math.max(0, audio.currentTime - 10);
+                rewind();
                 break;
             case 'ArrowRight':
-                audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+                fastForward();
                 break;
         }
     });
