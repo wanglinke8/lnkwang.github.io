@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"舒适viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>隐形的翅膀 - 张韶涵</title>
     <style>
         * {
@@ -262,16 +262,16 @@
             flex-shrink: 0;
         }
 
-        .control-button.active {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(0.95);
-        }
-
         .play-button {
             width: 65px;
             height: 65px;
             background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
             font-size: 1.5rem;
+        }
+
+        .control-button:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
         }
 
         .volume-section {
@@ -309,6 +309,7 @@
             margin-top: 10px;
             position: relative;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch; /* iOS滚动优化 */
         }
 
         .lyrics-section h3 {
@@ -528,7 +529,7 @@
         </div>
 
         <div class="lyrics-section" id="lyricsSection">
-            <div class="scroll-indicator" id="scrollIndicator">手动滚动</div>
+            <div class="scroll-indicator" id="scrollIndicator">自动滚动已暂停</div>
             <h3>歌词</h3>
             <div class="lyrics-container">
                 <div class="lyric-line">隐形的翅膀</div>
@@ -571,11 +572,8 @@
     let userScrolled = false;
     let scrollTimeout;
     let autoScrollEnabled = true;
-
-    // 移动端触摸控制相关变量
-    let isTouching = false;
-    let startY = 0;
-    let scrollTopStart = 0;
+    let isScrolling = false;
+    let lastScrollTime = 0;
 
     // 歌词时间轴（秒）
     const lyricTimings = [
@@ -610,45 +608,46 @@
         lyricsSection.addEventListener('scroll', handleUserScroll);
 
         // 移动端触摸事件 - 改进的处理方式
+        let startY = 0;
+        let startTime = 0;
+        let isTouching = false;
+
         lyricsSection.addEventListener('touchstart', function(e) {
             isTouching = true;
             startY = e.touches[0].clientY;
-            scrollTopStart = lyricsSection.scrollTop;
+            startTime = Date.now();
+            isScrolling = true;
             handleUserScroll();
-        }, { passive: true });
+        });
 
         lyricsSection.addEventListener('touchmove', function(e) {
             if (!isTouching) return;
-
             const currentY = e.touches[0].clientY;
-            const deltaY = currentY - startY;
-            const currentScrollTop = scrollTopStart - deltaY;
+            const deltaY = Math.abs(currentY - startY);
 
-            // 更新滚动状态
-            handleUserScroll();
-        }, { passive: true });
+            // 只有当移动距离足够大时才认为是用户主动滚动
+            if (deltaY > 5) {
+                handleUserScroll();
+            }
+        });
 
         lyricsSection.addEventListener('touchend', function(e) {
             isTouching = false;
-            // 延迟一段时间后再启用自动滚动检测
+            // 延迟一段时间后再允许自动滚动，避免触摸结束后的惯性滚动被误判
             setTimeout(() => {
-                if (!isTouching) {
-                    resetScrollTimeout();
-                }
+                isScrolling = false;
             }, 100);
         });
 
-        lyricsSection.addEventListener('touchcancel', function(e) {
-            isTouching = false;
-        });
-
-        // 鼠标事件（用于桌面端）
-        lyricsSection.addEventListener('mousedown', function(e) {
-            handleUserScroll();
-        });
-
-        lyricsSection.addEventListener('mouseup', function(e) {
-            resetScrollTimeout();
+        // 添加滚动结束检测
+        let scrollEndTimer;
+        lyricsSection.addEventListener('scroll', function() {
+            clearTimeout(scrollEndTimer);
+            scrollEndTimer = setTimeout(() => {
+                if (!isTouching) {
+                    isScrolling = false;
+                }
+            }, 150);
         });
 
         // 移动端触摸优化
@@ -657,16 +656,19 @@
             controlButtons.forEach(button => {
                 button.addEventListener('touchstart', function(e) {
                     e.preventDefault(); // 防止默认行为
-                    this.classList.add('active');
+                    this.style.transform = 'scale(0.95)';
+                    this.style.background = 'rgba(255, 255, 255, 0.2)';
                 });
 
                 button.addEventListener('touchend', function(e) {
                     e.preventDefault();
-                    this.classList.remove('active');
+                    this.style.transform = '';
+                    this.style.background = '';
                 });
 
-                button.addEventListener('touchcancel', function(e) {
-                    this.classList.remove('active');
+                // 防止触摸时的意外选择
+                button.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
                 });
             });
         }
@@ -691,6 +693,9 @@
     });
 
     function handleUserScroll() {
+        // 如果正在滚动中，不处理
+        if (isScrolling) return;
+
         userScrolled = true;
         autoScrollEnabled = false;
 
@@ -701,10 +706,8 @@
         if (scrollTimeout) {
             clearTimeout(scrollTimeout);
         }
-    }
 
-    function resetScrollTimeout() {
-        // 重新设置定时器
+        // 4秒后自动回到当前播放位置
         scrollTimeout = setTimeout(function() {
             userScrolled = false;
             autoScrollEnabled = true;
@@ -712,7 +715,7 @@
 
             // 滚动回当前播放的歌词
             scrollToCurrentLyric(true);
-        }, 3000); // 3秒后恢复自动滚动
+        }, 4000);
     }
 
     function togglePlay() {
@@ -768,7 +771,7 @@
         }
 
         // 如果歌词发生变化且允许自动滚动，则滚动到新的歌词位置
-        if (newActiveIndex !== currentLyricIndex && autoScrollEnabled && !userScrolled) {
+        if (newActiveIndex !== currentLyricIndex && autoScrollEnabled && !isScrolling) {
             currentLyricIndex = newActiveIndex;
             scrollToCurrentLyric(false);
         }
@@ -776,6 +779,7 @@
 
     function scrollToCurrentLyric(force) {
         if (!autoScrollEnabled && !force) return;
+        if (isScrolling && !force) return; // 如果用户正在滚动，不自动滚动
 
         const activeLine = document.querySelector('.lyric-line.active');
         if (activeLine) {
@@ -862,6 +866,16 @@
                 scrollToCurrentLyric(true);
             }
         }, 100);
+    });
+
+    // 页面可见性变化处理
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && autoScrollEnabled) {
+            // 页面重新可见时，确保歌词位置正确
+            setTimeout(() => {
+                scrollToCurrentLyric(true);
+            }, 100);
+        }
     });
 </script>
 </body>
