@@ -367,14 +367,23 @@
         clickedCard.style.transform = 'scale(0.95)';
 
         setTimeout(() => {
-            // 这里可以跳转到对应的歌曲页面
-            // 例如: window.location.href = songId + '.html';
-
-            // 目前显示提示信息
-            alert('即将跳转到《' + clickedCard.querySelector('.card-title').textContent + '》播放页面');
-
             // 恢复动画
             clickedCard.style.transform = '';
+
+            // 根据 songId 跳转到不同的页面
+            switch(songId) {
+                case 'invisible-wings':
+                    window.location.href = './songs/隐形的翅膀.html';
+                    break;
+                case 'dust-in-fireworks':
+                    window.location.href = './songs/烟火里的尘埃.html';
+                    break;
+                case 'keywords':
+                    window.location.href = './songs/关键词.html';
+                    break;
+                default:
+                    alert('即将跳转到《' + clickedCard.querySelector('.card-title').textContent + '》播放页面');
+            }
         }, 150);
     }
 
