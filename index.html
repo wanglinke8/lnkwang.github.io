@@ -42,7 +42,7 @@
 
         .nav-links {
             display: flex;
-            gap: 2.5rem; /* 增加链接之间的间距 */
+            gap: 2.5rem;
             list-style: none;
         }
         .nav-links a {
@@ -51,7 +51,7 @@
             transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
-            font-size: 1.1rem; /* 稍微增大字体 */
+            font-size: 1.1rem;
             white-space: nowrap;
         }
         .nav-links a:hover {
@@ -128,7 +128,6 @@
             background-image: url('./img/牢达.jpg');
         }
 
-
         .module-card:hover {
             transform: translateY(-10px);
             background: rgba(255, 255, 255, 0.1);
@@ -147,8 +146,8 @@
             letter-spacing: 0.5px;
             position: relative;
             z-index: 1;
-            text-decoration: none; /* 确保链接按钮没有下划线 */
-            display: inline-block; /* 确保按钮样式正确 */
+            text-decoration: none;
+            display: inline-block;
         }
         .module-button:hover {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -162,7 +161,7 @@
         /* 响应式调整 */
         @media (max-width: 992px) {
             .nav-links {
-                gap: 1.8rem; /* 中等屏幕稍微减小间距 */
+                gap: 1.8rem;
             }
             .nav-links a {
                 font-size: 1rem;
@@ -171,27 +170,27 @@
 
         @media (max-width: 768px) {
             .nav-links {
-                gap: 1.5rem; /* 小屏幕进一步减小间距 */
+                gap: 1.5rem;
             }
             .nav-links a {
                 font-size: 0.95rem;
             }
             main {
-                padding-top: 120px; /* 减小顶部内边距以适应更小的屏幕 */
+                padding-top: 120px;
             }
         }
 
         @media (max-width: 576px) {
             .nav-links {
-                gap: 1rem; /* 超小屏幕最小间距 */
-                flex-wrap: wrap; /* 允许在非常窄的屏幕上换行 */
+                gap: 1rem;
+                flex-wrap: wrap;
                 justify-content: center;
             }
             .nav-links a {
                 font-size: 0.9rem;
             }
             .hero-title {
-                font-size: 2.5rem; /* 减小标题字体以适应小屏幕 */
+                font-size: 2.5rem;
             }
         }
     </style>
@@ -234,8 +233,7 @@
             <h3 class="module-title">视频中心</h3>
             <p class="module-description">观看高质量视频内容，包括电影、纪录片、教程等。享受沉浸式的视觉体验。</p>
             <div class="module-card video-module">
-                <!-- 修改按钮：移除 onclick，添加 href 和 data 属性 -->
-                <a class="module-button" id="videoButton" data-tencent-app="com.tencent.qqlive" href="https://v.qq.com/">立即观看</a>
+                <button class="module-button" id="videoButton">立即观看</button>
             </div>
         </div>
         <!-- 游戏 -->
@@ -293,76 +291,114 @@
             container.appendChild(particle);
         }
     }
+
     function smoothScroll(target) {
         document.querySelector(target).scrollIntoView({behavior: 'smooth'});
     }
-    function openMusic(){window.location.href='./music/music.html';}
 
-    // 修改后的 openVideo 函数
+    function openMusic(){
+        window.location.href='./music/music.html';
+    }
+
+    // 修复后的视频打开函数
     function openVideo() {
-        // 注意：此函数现在由事件监听器调用，this 指向被点击的按钮元素
+        // 检测是否为移动设备
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const videoButton = this; // this 是被点击的 <a> 元素
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isAndroid = /Android/.test(navigator.userAgent);
 
         if (isMobile) {
-            // 移动端逻辑
-            const appScheme = videoButton.getAttribute('data-tencent-app');
-            const fallbackUrl = videoButton.getAttribute('href'); // 备用链接，即腾讯视频网页版
+            // 移动端逻辑：尝试打开腾讯视频APP
+            let appOpened = false;
 
-            if (appScheme) {
-                // 尝试通过 Deep Link 打开 App
-                const deepLink = `${appScheme}://`; // 标准的 Deep Link 格式
-                const intentLink = `intent://#Intent;scheme=${appScheme};package=${appScheme};end`; // Android 特有的 Intent
+            // 设置一个时间戳，用于检测是否成功打开了APP
+            const beforeTime = Date.now();
 
-                // 对于 iOS Safari，直接跳转 scheme 可能会被拦截，但这是最常用的方式
-                // 对于 Android，可能需要使用 intent:// scheme
-                const isAndroid = /Android/i.test(navigator.userAgent);
-
-                // 创建一个隐藏的 iframe 来尝试触发 Deep Link，减少页面跳转和可能的拦截
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = isAndroid ? intentLink : deepLink;
-                document.body.appendChild(iframe);
-
-                // 设置一个定时器，如果 App 没有启动，则跳转到备用链接（通常是应用商店或网页）
-                // 这是处理未安装 App 情况的常见方法
-                setTimeout(() => {
-                    document.body.removeChild(iframe); // 清理 iframe
-                    // 如果在定时器触发时，用户还没有离开页面（说明 App 可能未安装或未被打开）
-                    // 则跳转到备用链接。这里我们直接跳转到腾讯视频主页，用户可以在那里找到下载 App 的选项。
-                    // 如果想直接跳转到应用商店，需要获取应用商店的链接。
-                    if (fallbackUrl) {
-                        window.location.href = fallbackUrl;
-                    }
-                }, 1500); // 1.5秒后跳转到备用链接
-
-            } else {
-                // 如果没有 scheme，直接跳转到备用链接
-                if (fallbackUrl) {
-                    window.location.href = fallbackUrl;
+            // 监听页面可见性变化，如果用户离开页面说明APP可能已打开
+            const handleVisibilityChange = () => {
+                if (document.hidden) {
+                    appOpened = true;
                 }
+            };
+
+            // 监听窗口失焦事件（用户可能切换到了APP）
+            const handleBlur = () => {
+                appOpened = true;
+            };
+
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            window.addEventListener('blur', handleBlur);
+
+            try {
+                if (isIOS) {
+                    // iOS系统的腾讯视频URL Scheme
+                    const iosScheme = 'qqlive://';
+                    window.location.href = iosScheme;
+                } else if (isAndroid) {
+                    // Android系统使用Intent URL
+                    const androidIntent = 'intent://v.qq.com/#Intent;scheme=https;package=com.tencent.qqlive;end';
+                    window.location.href = androidIntent;
+
+                    // 备用方案：直接使用APP的URL Scheme
+                    setTimeout(() => {
+                        if (!appOpened) {
+                            window.location.href = 'qqlive://';
+                        }
+                    }, 500);
+                }
+
+                // 设置超时检测，如果APP未打开则跳转到网页版
+                setTimeout(() => {
+                    // 清理事件监听器
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    window.removeEventListener('blur', handleBlur);
+
+                    // 如果经过2秒钟用户还在当前页面，且没有触发页面隐藏/失焦事件
+                    // 说明APP可能未安装或打开失败，则跳转到网页版
+                    const afterTime = Date.now();
+                    if (!appOpened && (afterTime - beforeTime) >= 1800) {
+                        window.location.href = 'https://v.qq.com/';
+                    }
+                }, 2000);
+
+            } catch (error) {
+                // 如果出现错误，直接跳转到网页版
+                console.log('尝试打开APP失败，跳转到网页版');
+                window.location.href = 'https://v.qq.com/';
             }
         } else {
-            // 非移动端（电脑端）逻辑，保持不变
+            // 桌面端直接跳转到网页版
             window.location.href = 'https://v.qq.com/';
         }
     }
 
-    function openGames(){alert('🎮 游戏乐园即将开启！');}
-    function openContact(){alert('2838064158');}
-    function openEntertainment(){alert('🎪 娱乐专区即将开启！');}
-    function openBlog(){alert('📝 个人博客即将开启！');}
+    function openGames(){
+        alert('🎮 游戏乐园即将开启！');
+    }
 
+    function openContact(){
+        alert('QQ号：2838064158');
+    }
+
+    function openEntertainment(){
+        alert('🎪 娱乐专区即将开启！');
+    }
+
+    function openBlog(){
+        alert('📝 个人博客即将开启！');
+    }
+
+    // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', function(){
         createParticles();
 
-        // 为视频按钮添加点击事件监听器
+        // 为视频按钮添加点击事件
         const videoButton = document.getElementById('videoButton');
         if (videoButton) {
             videoButton.addEventListener('click', openVideo);
         }
 
-        // 导航链接平滑滚动 (适用于所有设备)
+        // 导航链接平滑滚动
         document.querySelectorAll('#navLinks a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
