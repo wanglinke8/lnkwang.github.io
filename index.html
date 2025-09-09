@@ -40,8 +40,14 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
         }
 
         /* 头部导航 */
@@ -147,8 +153,12 @@
         }
 
         @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5)); }
-            to { filter: drop-shadow(0 0 30px rgba(118, 75, 162, 0.8)); }
+            from {
+                filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 30px rgba(118, 75, 162, 0.8));
+            }
         }
 
         .hero-subtitle {
@@ -166,76 +176,27 @@
             margin-bottom: 4rem;
         }
 
-        .module-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 2.5rem;
+        .module-info {
             text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .module-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .module-card:hover::before {
-            left: 100%;
-        }
-
-        .module-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+            margin-bottom: 1rem;
         }
 
         .module-icon {
             width: 80px;
             height: 80px;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            transition: all 0.3s ease;
-        }
-
-        .module-card:hover .module-icon {
-            transform: rotateY(360deg);
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        /* 游戏和视频模块图标特殊处理 - 透明背景 */
-        .game-module .module-icon,
-        .video-module .module-icon {
-            background: transparent;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .game-module .module-card:hover .module-icon,
-        .video-module .module-card:hover .module-icon {
-            background: transparent;
-            transform: rotateY(360deg);
-            border-color: rgba(255, 255, 255, 0.6);
         }
 
         .module-title {
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -245,7 +206,24 @@
         .module-description {
             color: rgba(255, 255, 255, 0.7);
             line-height: 1.6;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            min-height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
         }
 
         .module-button {
@@ -267,16 +245,16 @@
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
         }
 
-        /* 特殊效果模块 */
-        .music-module {
-            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(30, 144, 255, 0.1) 100%);
-        }
-
+        /* 视频和游戏模块背景 */
         .video-module {
             background-image: url('./img/wz.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+        }
+
+        .video-module:hover {
+            background-image: url('https://pacai.oss-cn-beijing.aliyuncs.com/wz.jpg');
         }
 
         .game-module {
@@ -286,27 +264,8 @@
             background-repeat: no-repeat;
         }
 
-        .contact-module {
-            background: linear-gradient(135deg, rgba(255, 20, 147, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
-        }
-
-        .entertainment-module {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 69, 0, 0.1) 100%);
-        }
-
-        /* 模块悬停效果 - 修复背景消失问题 */
-        .video-module:hover {
-            background-image: url('https://pacai.oss-cn-beijing.aliyuncs.com/wz.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
         .game-module:hover {
             background-image: url('https://pacai.oss-cn-beijing.aliyuncs.com/%E7%89%A2%E8%BE%BE.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
         }
 
         /* 底部信息 */
@@ -321,171 +280,13 @@
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.9rem;
         }
-
-        /* 响应式设计 */
-        @media (max-width: 1024px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-
-            .modules-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 70%;
-                height: 100vh;
-                background: rgba(10, 10, 20, 0.95);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: right 0.4s ease;
-                z-index: 1000;
-                padding: 2rem;
-            }
-
-            .nav-links.active {
-                right: 0;
-            }
-
-            .nav-links li {
-                margin: 1.5rem 0;
-            }
-
-            .nav-links a {
-                font-size: 1.2rem;
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .modules-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            main {
-                padding-left: 1rem;
-                padding-right: 1rem;
-                padding-top: 100px;
-            }
-
-            nav {
-                padding: 0 1rem;
-            }
-
-            .logo {
-                font-size: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .module-card {
-                padding: 2rem 1.5rem;
-            }
-
-            .module-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-
-            .module-title {
-                font-size: 1.3rem;
-            }
-
-            .module-description {
-                font-size: 0.9rem;
-            }
-
-            .module-button {
-                padding: 0.6rem 1.5rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* 滚动条样式 */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        /* 移动端遮罩层 */
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .overlay.active {
-            display: block;
-            opacity: 1;
-        }
-
-        /* 移动端优化 */
-        @media (hover: none) and (pointer: coarse) {
-            .module-card:hover {
-                transform: none;
-                background: rgba(255, 255, 255, 0.05);
-                box-shadow: none;
-            }
-
-            .module-card:active {
-                transform: translateY(-5px) scale(1.01);
-                background: rgba(255, 255, 255, 0.1);
-                box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-            }
-        }
     </style>
 </head>
 <body>
 <!-- 动态背景 -->
 <div class="background-animation" id="particles"></div>
-
 <!-- 移动端遮罩层 -->
 <div class="overlay" id="overlay"></div>
-
 <!-- 头部导航 -->
 <header>
     <nav>
@@ -502,7 +303,6 @@
         </ul>
     </nav>
 </header>
-
 <!-- 主要内容 -->
 <main>
     <!-- 欢迎区域 -->
@@ -510,243 +310,91 @@
         <h1 class="hero-title">欢迎来到我的数字世界</h1>
         <p class="hero-subtitle">探索音乐、视频、游戏和更多精彩内容<br>在这里发现无限可能</p>
     </section>
-
     <!-- 功能模块 -->
     <section class="modules-grid">
         <!-- 音乐模块 -->
-        <div class="module-card music-module" id="music">
+        <div class="module-info">
             <div class="module-icon"><i class="fas fa-music"></i></div>
             <h3 class="module-title">音乐天地</h3>
             <p class="module-description">聆听精选音乐，感受旋律的魅力。从经典老歌到流行新曲，为您营造完美的听觉盛宴。</p>
-            <button class="module-button" onclick="openMusic()">开始聆听</button>
+            <div class="module-card">
+                <button class="module-button" onclick="openMusic()">开始聆听</button>
+            </div>
         </div>
-
         <!-- 视频模块 -->
-        <div class="module-card video-module" id="video">
+        <div class="module-info">
             <div class="module-icon"><i class="fas fa-film"></i></div>
             <h3 class="module-title">视频中心</h3>
             <p class="module-description">观看高质量视频内容，包括电影、纪录片、教程等。享受沉浸式的视觉体验。</p>
-            <button class="module-button" onclick="openVideo()">立即观看</button>
+            <div class="module-card video-module">
+                <button class="module-button" onclick="openVideo()">立即观看</button>
+            </div>
         </div>
-
         <!-- 游戏模块 -->
-        <div class="module-card game-module" id="games">
+        <div class="module-info">
             <div class="module-icon"><i class="fas fa-gamepad"></i></div>
             <h3 class="module-title">游戏乐园</h3>
             <p class="module-description">体验各种有趣的网页游戏，从休闲益智到刺激冒险，总有一款适合您。</p>
-            <button class="module-button" onclick="openGames()">开始游戏</button>
+            <div class="module-card game-module">
+                <button class="module-button" onclick="openGames()">开始游戏</button>
+            </div>
         </div>
-
         <!-- 联系模块 -->
-        <div class="module-card contact-module" id="contact">
+        <div class="module-info">
             <div class="module-icon"><i class="fas fa-envelope"></i></div>
             <h3 class="module-title">联系站长</h3>
             <p class="module-description">有任何问题或建议？欢迎随时与我联系，我会及时回复您的消息。</p>
-            <button class="module-button" onclick="openContact()">获取QQ</button>
+            <div class="module-card">
+                <button class="module-button" onclick="openContact()">获取QQ</button>
+            </div>
         </div>
-
         <!-- 娱乐模块 -->
-        <div class="module-card entertainment-module">
+        <div class="module-info">
             <div class="module-icon"><i class="fas fa-theater-masks"></i></div>
             <h3 class="module-title">娱乐专区</h3>
             <p class="module-description">发现更多有趣的娱乐内容，包括在线工具、趣味测试和互动体验。</p>
-            <button class="module-button" onclick="openEntertainment()">探索更多</button>
+            <div class="module-card">
+                <button class="module-button" onclick="openEntertainment()">探索更多</button>
+            </div>
         </div>
-
         <!-- 个人博客模块 -->
-        <div class="module-card">
+        <div class="module-info">
             <div class="module-icon"><i class="fas fa-blog"></i></div>
             <h3 class="module-title">个人博客</h3>
             <p class="module-description">分享我的思考、经验和见解。记录生活点滴，与您一起成长进步。</p>
-            <button class="module-button" onclick="openBlog()">阅读文章</button>
+            <div class="module-card">
+                <button class="module-button" onclick="openBlog()">阅读文章</button>
+            </div>
         </div>
     </section>
 </main>
-
 <!-- 底部信息 -->
 <footer>
-    <p class="footer-text">© 2024 个人数字空间 | 用心创造，分享美好</p>
+    <p class="footer-text">© 202 王琳科的私人网站</p>
 </footer>
-
 <script>
-    // 创建动态背景粒子
-    function createParticles() {
-        const container = document.getElementById('particles');
-        const particleCount = 50;
-
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-
-            const size = Math.random() * 4 + 2;
-            const x = Math.random() * 100;
-            const y = Math.random() * 100;
-            const animationDelay = Math.random() * 6;
-
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = x + '%';
-            particle.style.top = y + '%';
-            particle.style.animationDelay = animationDelay + 's';
-
-            container.appendChild(particle);
-        }
-    }
-
-    // 平滑滚动到指定区域
-    function smoothScroll(target) {
-        document.querySelector(target).scrollIntoView({
-            behavior: 'smooth'
-        });
-    }
-
-    // 模块功能函数
     function openMusic() {
         window.location.href = './music/music.html';
     }
 
     function openVideo() {
-        // 检测是否为移动设备
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-        if (isMobile) {
-            // 移动端：尝试打开腾讯视频APP
-            // 使用iframe方式触发APP打开，避免某些浏览器拦截
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'txvideo://';
-            document.body.appendChild(iframe);
-
-            // 延迟移除iframe
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-            }, 2000);
-
-            // 如果APP未安装，跳转到应用商店
-            setTimeout(() => {
-                window.location.href = 'https://v.qq.com/';
-            }, 1500);
-        } else {
-            // PC端：跳转到腾讯视频官网
-            window.location.href = 'https://v.qq.com/';
-        }
+        window.location.href = 'https://v.qq.com/';
     }
 
     function openGames() {
         alert('🎮 游戏乐园即将开启！准备开始游戏冒险...');
-        // 这里可以添加实际的游戏功能
     }
 
     function openContact() {
         alert('2838064158');
-        // 这里可以添加实际的联系表单功能
     }
 
     function openEntertainment() {
         alert('🎪 娱乐专区即将开启！更多有趣内容等待您的发现...');
-        // 这里可以添加实际的娱乐功能
     }
 
     function openBlog() {
         alert('📝 个人博客即将开启！准备阅读最新文章...');
-        // 这里可以添加实际的博客功能
-    }
-
-    // 移动端菜单切换
-    function toggleMenu() {
-        const navLinks = document.getElementById('navLinks');
-        const overlay = document.getElementById('overlay');
-
-        navLinks.classList.toggle('active');
-        overlay.classList.toggle('active');
-
-        // 防止背景滚动
-        document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
-    }
-
-    // 关闭移动端菜单
-    function closeMenu() {
-        const navLinks = document.getElementById('navLinks');
-        const overlay = document.getElementById('overlay');
-
-        navLinks.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // 页面加载完成后执行
-    document.addEventListener('DOMContentLoaded', function() {
-        createParticles();
-
-        // 添加导航链接点击事件
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = this.getAttribute('href');
-                if (target !== '#home') {
-                    smoothScroll(target);
-                } else {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }
-                closeMenu(); // 关闭移动端菜单
-            });
-        });
-
-        // 头部导航滚动效果
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(0, 0, 0, 0.2)';
-            } else {
-                header.style.background = 'rgba(0, 0, 0, 0.1)';
-            }
-        });
-
-        // 移动端菜单按钮事件
-        document.getElementById('menuToggle').addEventListener('click', toggleMenu);
-
-        // 遮罩层点击事件
-        document.getElementById('overlay').addEventListener('click', closeMenu);
-    });
-
-    // 鼠标跟随效果（仅在非移动设备上启用）
-    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        document.addEventListener('mousemove', function(e) {
-            const cursor = document.createElement('div');
-            cursor.style.cssText = `
-                    position: fixed;
-                    width: 10px;
-                    height: 10px;
-                    background: radial-gradient(circle, rgba(102, 126, 234, 0.8) 0%, transparent 70%);
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 9999;
-                    left: ${e.clientX - 5}px;
-                    top: ${e.clientY - 5}px;
-                    animation: fadeOut 1s forwards;
-                `;
-
-            document.body.appendChild(cursor);
-
-            setTimeout(() => {
-                if (cursor.parentNode) {
-                    cursor.parentNode.removeChild(cursor);
-                }
-            }, 1000);
-        });
-
-        // 淡出动画
-        const style = document.createElement('style');
-        style.textContent = `
-                @keyframes fadeOut {
-                    0% { opacity: 1; transform: scale(1); }
-                    100% { opacity: 0; transform: scale(0); }
-                }
-            `;
-        document.head.appendChild(style);
     }
 </script>
 </body>
