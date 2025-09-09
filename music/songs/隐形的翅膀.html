@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"舒适viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>隐形的翅膀 - 张韶涵</title>
     <style>
         * {
@@ -309,7 +309,7 @@
             margin-top: 10px;
             position: relative;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* iOS滚动优化 */
+            -webkit-overflow-scrolling: touch;
         }
 
         .lyrics-section h3 {
@@ -573,7 +573,7 @@
     let scrollTimeout;
     let autoScrollEnabled = true;
     let isScrolling = false;
-    let lastScrollTime = 0;
+    let isTouching = false;
 
     // 歌词时间轴（秒）
     const lyricTimings = [
@@ -610,7 +610,6 @@
         // 移动端触摸事件 - 改进的处理方式
         let startY = 0;
         let startTime = 0;
-        let isTouching = false;
 
         lyricsSection.addEventListener('touchstart', function(e) {
             isTouching = true;
@@ -636,7 +635,7 @@
             // 延迟一段时间后再允许自动滚动，避免触摸结束后的惯性滚动被误判
             setTimeout(() => {
                 isScrolling = false;
-            }, 100);
+            }, 300);
         });
 
         // 添加滚动结束检测
@@ -654,21 +653,14 @@
         if ('ontouchstart' in window) {
             const controlButtons = document.querySelectorAll('.control-button');
             controlButtons.forEach(button => {
-                button.addEventListener('touchstart', function(e) {
-                    e.preventDefault(); // 防止默认行为
+                button.addEventListener('touchstart', function() {
                     this.style.transform = 'scale(0.95)';
                     this.style.background = 'rgba(255, 255, 255, 0.2)';
                 });
 
-                button.addEventListener('touchend', function(e) {
-                    e.preventDefault();
+                button.addEventListener('touchend', function() {
                     this.style.transform = '';
                     this.style.background = '';
-                });
-
-                // 防止触摸时的意外选择
-                button.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
                 });
             });
         }
@@ -693,9 +685,6 @@
     });
 
     function handleUserScroll() {
-        // 如果正在滚动中，不处理
-        if (isScrolling) return;
-
         userScrolled = true;
         autoScrollEnabled = false;
 
@@ -722,14 +711,18 @@
         const playButton = document.getElementById('playButton');
 
         if (audio.paused) {
-            audio.play().then(() => {
-                playButton.textContent = '⏸';
-                albumArt.classList.add('playing');
-            }).catch(e => {
-                console.log("播放被阻止：", e);
-                playButton.textContent = '▶';
-                albumArt.classList.remove('playing');
-            });
+            // 移动端需要用户交互才能播放
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    playButton.textContent = '⏸';
+                    albumArt.classList.add('playing');
+                }).catch(e => {
+                    console.log("播放被阻止：", e);
+                    playButton.textContent = '▶';
+                    albumArt.classList.remove('playing');
+                });
+            }
         } else {
             audio.pause();
             playButton.textContent = '▶';
@@ -783,11 +776,6 @@
 
         const activeLine = document.querySelector('.lyric-line.active');
         if (activeLine) {
-            const lyricsRect = lyricsSection.getBoundingClientRect();
-            const lineRect = activeLine.getBoundingClientRect();
-
-            // 计算需要滚动的距离，让当前歌词显示在歌词区域的中间
-            const scrollTop = lyricsSection.scrollTop;
             const containerHeight = lyricsSection.clientHeight;
             const lineTop = activeLine.offsetTop;
             const lineHeight = activeLine.offsetHeight;
