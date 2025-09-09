@@ -35,27 +35,15 @@
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between; /* 在 Logo 位置和菜单之间留空隙 */
+            justify-content: center;
             align-items: center;
             padding: 0 2rem;
         }
-        /* .logo { 已移除或注释掉 } */
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem; /* 增加链接之间的间距 */
             list-style: none;
-            /* 移动端隐藏 */
-            display: none;
-        }
-        /* 桌面端显示导航链接 */
-        @media (min-width: 769px) {
-            .nav-links {
-                display: flex !important; /* 强制在桌面端显示 */
-            }
-            .menu-toggle {
-                display: none !important; /* 强制在桌面端隐藏菜单按钮 */
-            }
         }
         .nav-links a {
             color: rgba(255, 255, 255, 0.8);
@@ -63,7 +51,8 @@
             transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
-            font-size: 1rem; /* 可根据需要调整字体大小 */
+            font-size: 1.1rem; /* 稍微增大字体 */
+            white-space: nowrap;
         }
         .nav-links a:hover {
             color: #667eea;
@@ -82,78 +71,13 @@
             width: 100%;
         }
 
-        /* 移动端菜单按钮 */
-        .menu-toggle {
-            display: block; /* 默认显示 */
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 1001;
-            padding: 0.5rem; /* 增加点击区域 */
-        }
-
-        /* 移动端全屏菜单样式 */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 30, 0.95); /* 深色半透明背景 */
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            transform: translateX(100%);
-            transition: transform 0.4s ease-in-out;
-        }
-        .mobile-menu.active {
-            transform: translateX(0);
-        }
-        .mobile-menu .nav-links-mobile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            list-style: none;
-            width: 100%;
-            padding: 0;
-            margin: 0;
-        }
-        .mobile-menu .nav-links-mobile li {
-            margin: 1.5rem 0;
-        }
-        .mobile-menu .nav-links-mobile a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-size: 1.8rem; /* 移动端字体更大 */
-            padding: 1rem 2rem;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .mobile-menu .nav-links-mobile a:hover {
-            color: #f093fb;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        /* 移动端菜单关闭按钮 */
-        .close-menu {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            padding: 0.5rem;
+        /* 移除移动端菜单相关样式 */
+        .menu-toggle, .mobile-menu, .close-menu, .nav-links-mobile {
+            display: none !important;
         }
 
         /* 主要内容区域 */
-        main { padding-top: 120px; max-width: 1400px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; }
+        main { padding-top: 140px; max-width: 1400px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; }
         /* 欢迎区域 */
         .hero-section { text-align: center; margin-bottom: 4rem; padding: 4rem 0; }
         .hero-title { font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: glow 2s ease-in-out infinite alternate; }
@@ -232,27 +156,50 @@
         /* 底部 */
         footer { text-align: center; padding: 3rem 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: 4rem; }
         .footer-text { color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
+
+        /* 响应式调整 */
+        @media (max-width: 992px) {
+            .nav-links {
+                gap: 1.8rem; /* 中等屏幕稍微减小间距 */
+            }
+            .nav-links a {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem; /* 小屏幕进一步减小间距 */
+            }
+            .nav-links a {
+                font-size: 0.95rem;
+            }
+            main {
+                padding-top: 120px; /* 减小顶部内边距以适应更小的屏幕 */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-links {
+                gap: 1rem; /* 超小屏幕最小间距 */
+                flex-wrap: wrap; /* 允许在非常窄的屏幕上换行 */
+                justify-content: center;
+            }
+            .nav-links a {
+                font-size: 0.9rem;
+            }
+            .hero-title {
+                font-size: 2.5rem; /* 减小标题字体以适应小屏幕 */
+            }
+        }
     </style>
 </head>
 <body>
 <div class="background-animation" id="particles"></div>
-<!-- 移动端菜单 -->
-<div class="mobile-menu" id="mobileMenu">
-    <button class="close-menu" id="closeMenu"><i class="fas fa-times"></i></button>
-    <ul class="nav-links-mobile" id="navLinksMobile">
-        <li><a href="#home">首页</a></li>
-        <li><a href="#music">音乐</a></li>
-        <li><a href="#video">视频</a></li>
-        <li><a href="#games">游戏</a></li>
-        <li><a href="#contact">联系</a></li>
-        <li><a href="#entertainment">娱乐</a></li>
-        <li><a href="#blog">博客</a></li>
-    </ul>
-</div>
+
 <header>
     <nav>
-        <!-- <div class="logo">数字空间</div>  Logo 已移除 -->
-        <!-- 桌面端导航链接 -->
+        <!-- 导航链接始终横向显示 -->
         <ul class="nav-links" id="navLinks">
             <li><a href="#home">首页</a></li>
             <li><a href="#music">音乐</a></li>
@@ -262,8 +209,6 @@
             <li><a href="#entertainment">娱乐</a></li>
             <li><a href="#blog">博客</a></li>
         </ul>
-        <!-- 移动端菜单按钮 -->
-        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
     </nav>
 </header>
 <main>
@@ -355,21 +300,10 @@
     function openEntertainment(){alert('🎪 娱乐专区即将开启！');}
     function openBlog(){alert('📝 个人博客即将开启！');}
 
-    // 移动端菜单切换
-    function toggleMobileMenu(){
-        const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenu.classList.toggle('active');
-        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
-    }
-    function closeMobileMenu(){
-        document.getElementById('mobileMenu').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
     document.addEventListener('DOMContentLoaded', function(){
         createParticles();
 
-        // 桌面端导航链接平滑滚动
+        // 导航链接平滑滚动 (适用于所有设备)
         document.querySelectorAll('#navLinks a').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -382,35 +316,11 @@
             });
         });
 
-        // 移动端导航链接平滑滚动并关闭菜单
-        document.querySelectorAll('#navLinksMobile a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = this.getAttribute('href');
-                if (target === '#home') {
-                    window.scrollTo({top: 0, behavior: 'smooth'});
-                } else {
-                    smoothScroll(target);
-                }
-                closeMobileMenu(); // 点击后关闭菜单
-            });
-        });
-
         // 滚动时改变头部背景
         window.addEventListener('scroll', function(){
             const header = document.querySelector('header');
             header.style.background = window.scrollY > 100 ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.1)';
         });
-
-        // 绑定移动端菜单按钮事件
-        document.getElementById('menuToggle').addEventListener('click', toggleMobileMenu);
-        document.getElementById('closeMenu').addEventListener('click', closeMobileMenu);
-        // 点击菜单外部区域关闭菜单 (可选)
-        // document.getElementById('mobileMenu').addEventListener('click', function(e) {
-        //     if (e.target === this) {
-        //         closeMobileMenu();
-        //     }
-        // });
     });
 </script>
 </body>
