@@ -372,7 +372,7 @@
         }
     }
 
-    // 修改后的游戏打开函数 - 根据要求修改
+    // 修复后的王者荣耀游戏打开函数
     function openGames() {
         // 检测是否为移动设备
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -385,67 +385,136 @@
         if (isMobile) {
             // 移动端逻辑：尝试打开王者荣耀APP
             let appOpened = false;
+            let timeoutId = null;
 
-            // 设置一个时间戳，用于检测是否成功打开了APP
-            const beforeTime = Date.now();
+            // 创建隐藏的iframe来尝试打开APP，避免页面跳转
+            function tryOpenApp(scheme) {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = scheme;
+                document.body.appendChild(iframe);
 
-            // 监听页面可见性变化，如果用户离开页面说明APP可能已打开
+                // 清理iframe
+                setTimeout(() => {
+                    if (iframe && iframe.parentNode) {
+                        iframe.parentNode.removeChild(iframe);
+                    }
+                }, 1000);
+            }
+
+            // 监听页面可见性变化
             const handleVisibilityChange = () => {
-                if (document.hidden) {
+                if (document.hidden && !appOpened) {
                     appOpened = true;
+                    if (timeoutId) {
+                        clearTimeout(timeoutId);
+                        timeoutId = null;
+                    }
+                    console.log('检测到页面隐藏，可能APP已打开');
                 }
             };
 
-            // 监听窗口失焦事件（用户可能切换到了APP）
+            // 监听窗口失焦事件
             const handleBlur = () => {
-                appOpened = true;
+                if (!appOpened) {
+                    appOpened = true;
+                    if (timeoutId) {
+                        clearTimeout(timeoutId);
+                        timeoutId = null;
+                    }
+                    console.log('检测到窗口失焦，可能APP已打开');
+                }
             };
 
+            // 添加事件监听器
             document.addEventListener('visibilitychange', handleVisibilityChange);
             window.addEventListener('blur', handleBlur);
+            window.addEventListener('pagehide', handleBlur);
 
             try {
-                // 尝试使用Intent或Scheme打开APP
                 if (isIOS) {
-                    // iOS系统的王者荣耀URL Scheme (根据网络资料推测，可能需要官方确认)
-                    // 如果 scheme 不准确，请查找官方文档
-                    const iosScheme = 'tencentlaunchpro://'; // 或者可能是其他，如 'gamecenter://'
-                    window.location.href = iosScheme;
-                } else if (isAndroid) {
-                    // Android系统使用Intent URL 打开王者荣耀APP
-                    // 包名 'com.tencent.tmgp.sgame' 是王者荣耀的官方包名
-                    const androidIntent = 'intent://com.tencent.tmgp.sgame/#Intent;scheme=;package=com.tencent.tmgp.sgame;end';
-                    window.location.href = androidIntent;
+                    // iOS系统尝试多个可能的URL Scheme
+                    console.log('iOS设备，尝试打开王者荣耀APP');
 
-                    // 备用方案：直接使用APP的URL Scheme (如果Intent方式不奏效)
+                    // 尝试官方可能的schemes
+                    const iosSchemes = [
+                        'smoba://', // 王者荣耀国际版
+                        'tencent1104466820://', // 腾讯游戏通用scheme
+                        'tmgp://com.tencent.tmgp.sgame', // 腾讯手游助手相关
+                        'tencentlaunchomg://' // 腾讯游戏启动器
+                    ];
+
+                    // 依次尝试不同的scheme
+                    iosSchemes.forEach((scheme, index) => {
+                        setTimeout(() => {
+                            if (!appOpened) {
+                                console.log(`尝试iOS scheme ${index + 1}: ${scheme}`);
+                                tryOpenApp(scheme);
+                            }
+                        }, index * 200);
+                    });
+
+                } else if (isAndroid) {
+                    // Android系统处理
+                    console.log('Android设备，尝试打开王者荣耀APP');
+
+                    // 方法1：使用Intent URL
+                    const packageName = 'com.tencent.tmgp.sgame';
+                    const intentUrl = `intent://launch/#Intent;package=${packageName};scheme=tmgp;end`;
+
+                    console.log('尝试Android Intent:', intentUrl);
+                    window.location.href = intentUrl;
+
+                    // 方法2：备用scheme方式
                     setTimeout(() => {
                         if (!appOpened) {
-                            window.location.href = 'tmgp://com.tencent.tmgp.sgame'; // 另一个可能的Scheme
+                            console.log('尝试备用scheme');
+                            const schemes = [
+                                'tmgp://com.tencent.tmgp.sgame',
+                                'tencent1104466820://',
+                                'tmassistantsdk://launch_app?package_name=com.tencent.tmgp.sgame'
+                            ];
+
+                            schemes.forEach((scheme, index) => {
+                                setTimeout(() => {
+                                    if (!appOpened) {
+                                        console.log(`尝试Android scheme ${index + 1}: ${scheme}`);
+                                        tryOpenApp(scheme);
+                                    }
+                                }, index * 200);
+                            });
                         }
-                    }, 500); // 短一点的延迟
+                    }, 800);
                 }
 
-                // 设置超时检测，如果APP未打开则跳转到网页版
-                setTimeout(() => {
+                // 设置较长的超时时间，给APP充分的启动时间
+                timeoutId = setTimeout(() => {
+                    console.log('超时检测触发，当前状态 - appOpened:', appOpened, 'document.hidden:', document.hidden);
+
                     // 清理事件监听器
                     document.removeEventListener('visibilitychange', handleVisibilityChange);
                     window.removeEventListener('blur', handleBlur);
+                    window.removeEventListener('pagehide', handleBlur);
 
-                    // 如果经过2秒钟用户还在当前页面，且没有触发页面隐藏/失焦事件
-                    // 说明APP可能未安装或打开失败，则跳转到官网
-                    const afterTime = Date.now();
-                    if (!appOpened && (afterTime - beforeTime) >= 1800) {
+                    // 如果APP没有打开，跳转到官网
+                    if (!appOpened && !document.hidden) {
+                        console.log('APP未打开，跳转到王者荣耀官网');
                         window.location.href = webUrl;
                     }
-                }, 2000); // 2秒超时
+                }, 4000); // 增加到4秒超时
 
             } catch (error) {
-                // 如果出现错误，直接跳转到网页版
-                console.log('尝试打开王者荣耀APP失败，跳转到官网');
+                console.log('尝试打开王者荣耀APP时出现错误:', error);
+                // 清理事件监听器
+                document.removeEventListener('visibilitychange', handleVisibilityChange);
+                window.removeEventListener('blur', handleBlur);
+                window.removeEventListener('pagehide', handleBlur);
+                // 直接跳转到官网
                 window.location.href = webUrl;
             }
         } else {
             // 桌面端直接跳转到官网
+            console.log('桌面端设备，直接跳转到王者荣耀官网');
             window.location.href = webUrl;
         }
     }
