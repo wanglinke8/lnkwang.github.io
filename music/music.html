@@ -161,12 +161,20 @@
             transition: all 0.3s ease;
         }
 
+        /* 修改：第2个卡片（鼓楼） */
         .music-card:nth-child(2) .card-icon {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            box-shadow: 0 10px 30px rgba(255, 154, 158, 0.3);
+        }
+
+        /* 修改：第3个卡片（烟火里的尘埃） */
+        .music-card:nth-child(3) .card-icon {
             background: linear-gradient(45deg, #4ecdc4, #44a08d);
             box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
         }
 
-        .music-card:nth-child(3) .card-icon {
+        /* 修改：第4个卡片（关键词） */
+        .music-card:nth-child(4) .card-icon {
             background: linear-gradient(45deg, #ffd93d, #ff9068);
             box-shadow: 0 10px 30px rgba(255, 217, 61, 0.3);
         }
@@ -397,6 +405,15 @@
             <div class="play-button">▶</div>
         </div>
 
+        <!-- 新增：鼓楼 -->
+        <div class="music-card" onclick="goToSong('drum-tower')">
+            <div class="card-icon">🎸</div>
+            <h2 class="card-title">鼓楼</h2>
+            <p class="card-artist">赵雷</p>
+            <p class="card-description">民谣诗人赵雷的经典之作，用质朴的歌词描绘老北京的记忆与乡愁</p>
+            <div class="play-button">▶</div>
+        </div>
+
         <div class="music-card" onclick="goToSong('dust-in-fireworks')">
             <div class="card-icon">🎶</div>
             <h2 class="card-title">烟火里的尘埃</h2>
@@ -494,6 +511,9 @@
             switch(songId) {
                 case 'invisible-wings':
                     window.location.href = './songs/隐形的翅膀.html';
+                    break;
+                case 'drum-tower':
+                    window.location.href = './songs/鼓楼.html';
                     break;
                 case 'dust-in-fireworks':
                     window.location.href = './songs/烟火里的尘埃.html';
