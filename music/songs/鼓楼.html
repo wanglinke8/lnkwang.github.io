@@ -508,7 +508,7 @@
         <div class="player-section">
             <div class="album-art" id="albumArt">
                 <img src="鼓楼.jpg" alt="赵雷 - 鼓楼" draggable="false"
-                     onerror="this.src='image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
+                     onerror="this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
             </div>
 
             <div class="progress-section">
@@ -540,6 +540,7 @@
 
 <script>
     const audio = new Audio('赵雷-鼓楼.wav');
+    audio.loop = true;
     const albumArt = document.getElementById('albumArt');
     const lyricsSection = document.getElementById('lyricsSection');
     const scrollIndicator = document.getElementById('scrollIndicator');
@@ -726,19 +727,9 @@
             updateProgress();
         });
 
-        // 修改：使用 ended 事件实现循环播放
         audio.addEventListener('ended', function() {
-            // 重新播放音频
-            audio.currentTime = 0;
-            audio.play().then(() => {
-                // 保持播放状态
-                document.getElementById('playButton').textContent = '⏸';
-                albumArt.classList.add('playing');
-            }).catch(e => {
-                console.log("循环播放失败：", e);
-                document.getElementById('playButton').textContent = '▶';
-                albumArt.classList.remove('playing');
-            });
+            document.getElementById('playButton').textContent = '▶';
+            albumArt.classList.remove('playing');
         });
     });
 

@@ -540,6 +540,7 @@
 
 <script>
     const audio = new Audio('隐形的翅膀.wav');
+    audio.loop = true;
     const albumArt = document.getElementById('albumArt');
     const lyricsSection = document.getElementById('lyricsSection');
     const scrollIndicator = document.getElementById('scrollIndicator');
@@ -670,20 +671,9 @@
         }, { once: true });
 
         audio.addEventListener('timeupdate', updateProgress);
-
-        // 修改：使用 ended 事件实现循环播放
         audio.addEventListener('ended', function() {
-            // 重新播放音频
-            audio.currentTime = 0;
-            audio.play().then(() => {
-                // 保持播放状态
-                document.getElementById('playButton').textContent = '⏸';
-                albumArt.classList.add('playing');
-            }).catch(e => {
-                console.log("循环播放失败：", e);
-                document.getElementById('playButton').textContent = '▶';
-                albumArt.classList.remove('playing');
-            });
+            document.getElementById('playButton').textContent = '▶';
+            albumArt.classList.remove('playing');
         });
     });
 
