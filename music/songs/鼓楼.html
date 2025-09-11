@@ -514,7 +514,7 @@
             <div class="progress-section">
                 <div class="time-info">
                     <span id="current-time">0:00</span>
-                    <span id="total-time">4:41</span>
+                    <span id="total-time">0:00</span>
                 </div>
                 <div class="progress-bar" onclick="seekTo(event)">
                     <div class="progress-fill" id="progress"></div>
@@ -551,6 +551,7 @@
     let autoScrollEnabled = true;
     let isScrolling = false;
     let isTouching = false;
+    let durationUpdated = false;
 
     // 歌词时间轴（秒）
     const lyricTimings = [
@@ -618,6 +619,19 @@
             });
             lyricsContainer.appendChild(lyricElement);
         });
+    }
+
+    // 更新总时间显示
+    function updateTotalTime() {
+        if (durationUpdated) return;
+        const duration = audio.duration;
+        if (isNaN(duration) || !isFinite(duration)) return;
+
+        const minutes = Math.floor(duration / 60);
+        const seconds = Math.floor(duration % 60);
+        document.getElementById('total-time').textContent =
+            minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        durationUpdated = true;
     }
 
     // 页面加载完成后初始化
@@ -694,13 +708,18 @@
         }
 
         // 音频事件监听
-        audio.addEventListener('loadedmetadata', function() {
-            const duration = audio.duration;
-            const minutes = Math.floor(duration / 60);
-            const seconds = Math.floor(duration % 60);
-            document.getElementById('total-time').textContent =
-                minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-        });
+        audio.addEventListener('loadedmetadata', updateTotalTime);
+
+        // 在用户第一次点击播放时再尝试更新一次
+        document.getElementById('playButton').addEventListener('click', function() {
+            updateTotalTime();
+        }, { once: true });
+
+        // 使用 timeupdate 事件兜底更新
+        audio.addEventListener('timeupdate', function() {
+            updateTotalTime();
+            updateProgress();
+        }, { once: true });
 
         audio.addEventListener('timeupdate', updateProgress);
         audio.addEventListener('ended', function() {
@@ -736,6 +755,7 @@
                 playPromise.then(() => {
                     playButton.textContent = '⏸';
                     albumArt.classList.add('playing');
+                    updateTotalTime(); // 播放时再次尝试更新总时间
                 }).catch(e => {
                     console.log("播放被阻止：", e);
                     playButton.textContent = '▶';
