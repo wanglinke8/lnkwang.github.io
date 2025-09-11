@@ -539,7 +539,8 @@
 </div>
 
 <script>
-    const audio = new Audio('赵雷-鼓楼.wav'); // 请确保音频文件路径正确
+    const audio = new Audio('赵雷-鼓楼.wav');
+    audio.loop = true;
     const albumArt = document.getElementById('albumArt');
     const lyricsSection = document.getElementById('lyricsSection');
     const scrollIndicator = document.getElementById('scrollIndicator');
