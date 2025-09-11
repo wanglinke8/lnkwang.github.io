@@ -21,7 +21,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 动态背景效果 */
         .background-animation {
             position: fixed;
             top: 0;
@@ -187,13 +186,21 @@
         }
 
         @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes rotateAlbum {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .progress-section {
@@ -316,11 +323,6 @@
             text-align: center;
         }
 
-        .lyric-line:active {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(0.98);
-        }
-
         .lyric-line.active {
             background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
             color: #fff;
@@ -338,11 +340,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
         }
 
-        /* 歌词滚动状态指示器 */
         .scroll-indicator {
             position: absolute;
             top: 10px;
@@ -361,42 +367,15 @@
             opacity: 1;
         }
 
-        /* 平板适配 */
         @media (min-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr 350px;
                 gap: 30px;
             }
 
-            .header {
-                padding: 20px 0;
-            }
-
-            .back-button {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-            }
-
-            .song-title {
-                font-size: 2.5rem;
-                margin-bottom: 10px;
-            }
-
-            .artist-name {
-                font-size: 1.3rem;
-            }
-
             .album-art {
                 width: 300px;
                 height: 300px;
-                margin-bottom: 30px;
-            }
-
-            .control-button {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
             }
 
             .play-button {
@@ -404,96 +383,16 @@
                 height: 80px;
                 font-size: 2rem;
             }
-
-            .lyrics-section {
-                height: fit-content;
-                max-height: 70vh;
-                padding: 40px;
-            }
-
-            .lyrics-container {
-                font-size: 1.1rem;
-            }
-
-            .lyric-line {
-                text-align: left;
-                padding-left: 15px;
-            }
-
-            .lyric-line.active::before {
-                left: -10px;
-            }
-        }
-
-        /* 大屏适配 */
-        @media (min-width: 1024px) {
-            .container {
-                padding: 20px;
-            }
-
-            .main-content {
-                margin-top: 40px;
-            }
-
-            .album-art {
-                width: 350px;
-                height: 350px;
-            }
-        }
-
-        /* 自定义滚动条 */
-        .lyrics-section::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .lyrics-section::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-        }
-
-        .lyrics-section::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .lyrics-section::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* 鼓楼主题装饰 */
-        .drum-tower-decoration {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .drum-tower-decoration::before {
-            content: '';
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            top: 5px;
         }
     </style>
 </head>
 <body>
-<!-- 动态背景鼓楼 -->
 <div class="background-animation">
     <div class="drum-tower" style="animation-delay: 0s;"></div>
     <div class="drum-tower" style="animation-delay: 5s;"></div>
     <div class="drum-tower" style="animation-delay: 10s;"></div>
     <div class="drum-tower" style="animation-delay: 15s;"></div>
 </div>
-
 <div class="container">
     <div class="header">
         <button class="back-button" onclick="goBack()">←</button>
@@ -501,16 +400,12 @@
             <h1 class="song-title">鼓楼</h1>
             <p class="artist-name">赵雷</p>
         </div>
-        <div class="drum-tower-decoration"></div>
     </div>
-
     <div class="main-content">
         <div class="player-section">
             <div class="album-art" id="albumArt">
-                <img src="鼓楼.jpg" alt="赵雷 - 鼓楼" draggable="false"
-                     onerror="this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
+                <img src="鼓楼.jpg" alt="赵雷 - 鼓楼">
             </div>
-
             <div class="progress-section">
                 <div class="time-info">
                     <span id="current-time">0:00</span>
@@ -520,367 +415,134 @@
                     <div class="progress-fill" id="progress"></div>
                 </div>
             </div>
-
             <div class="controls">
                 <button class="control-button" onclick="rewind()">⏪</button>
                 <button class="control-button play-button" id="playButton" onclick="togglePlay()">▶</button>
                 <button class="control-button" onclick="fastForward()">⏩</button>
             </div>
         </div>
-
         <div class="lyrics-section" id="lyricsSection">
             <div class="scroll-indicator" id="scrollIndicator"></div>
             <h3>歌词</h3>
-            <div class="lyrics-container" id="lyricsContainer">
-                <!-- 歌词将通过JavaScript动态加载 -->
-            </div>
+            <div class="lyrics-container" id="lyricsContainer"></div>
         </div>
     </div>
 </div>
-
 <script>
     const audio = new Audio('赵雷-鼓楼.wav');
     audio.loop = true;
     const albumArt = document.getElementById('albumArt');
-    const lyricsSection = document.getElementById('lyricsSection');
-    const scrollIndicator = document.getElementById('scrollIndicator');
-    const lyricsContainer = document.getElementById('lyricsContainer');
-
-    let currentLyricIndex = 0;
-    let userScrolled = false;
-    let scrollTimeout;
-    let autoScrollEnabled = true;
-    let isScrolling = false;
-    let isTouching = false;
     let durationUpdated = false;
+    let isPlaying = false;
 
-    // 歌词时间轴（秒）
-    const lyricTimings = [
-        0, 10, 15, 27.15, 32.80, 35.18, 39.30, 43.17, 48.80, 59.23,
-        61.40, 63.16, 67.95, 71.60, 76.25, 80.20, 84.22, 88.25, 108.15,
-        114.10, 116.22, 120.00, 125.00, 130.14, 133.05, 136.10, 173.17,
-        177.10, 181.28, 185.25, 191.00, 194.20, 197.20, 202.22, 206.00,
-        214.11, 222.09, 230.20
-    ];
-
-    // 歌词文本
-    const lyrics = [
-        "[00:00.00]鼓楼 - 赵雷",
-        "[00:10.00]词：赵雷",
-        "[00:15.00]曲：赵雷",
-        "[00:27.15]我走在鼓楼下面",
-        "[00:32.80]路在堵着",
-        "[00:35.18]雨后的阳光散落",
-        "[00:39.30]人们都出来了",
-        "[00:43.17]执着的迷惘的",
-        "[00:48.80]文艺青年很多",
-        "[00:59.23]如果我无聊了就会来这里坐坐",
-        "[01:01.40]我是个沉默不语的",
-        "[01:03.16]靠着墙壁晒太阳的过客",
-        "[01:07.95]如果我有些倦意了",
-        "[01:11.60]就让我在这里独自醒过",
-        "[01:16.25]我站在鼓楼上面",
-        "[01:20.20]一切繁华与我无关",
-        "[01:24.22]这是个拥挤的地方",
-        "[01:28.25]而我却很平凡",
-        "[01:48.15]我走在鼓楼下面",
-        "[01:54.10]淋湿的咖啡馆",
-        "[01:56.22]睡不着的后海边",
-        "[02:00.00]月亮还在抽着烟",
-        "[02:05.00]喝醉的亲吻着",
-        "[02:10.14]快活的人不眠",
-        "[02:13.05]唯有我倚着围栏",
-        "[02:16.10]对过往说晚安",
-        "[02:53.17]我是个沉默不语的",
-        "[02:57.10]靠着车窗想念你的乘客",
-        "[03:01.28]当107路再次经过",
-        "[03:05.25]时间是带走青春的电车",
-        "[03:11.00]我站在什刹海边",
-        "[03:14.20]一切甜蜜与我无关",
-        "[03:17.20]这是个拥挤的地方",
-        "[03:22.22]而我却很孤单",
-        "[03:26.00]我在鼓楼 我在鼓楼",
-        "[03:34.11]我在鼓楼",
-        "[03:42.09]我在鼓楼 我在鼓楼",
-        "[03:50.20]我在鼓楼"
-    ];
-
-    // 初始化歌词显示
-    function initLyrics() {
-        lyricsContainer.innerHTML = '';
-        lyrics.forEach((line, index) => {
-            const lyricElement = document.createElement('div');
-            lyricElement.className = 'lyric-line';
-            lyricElement.textContent = line.split(']')[1] || line;
-            lyricElement.dataset.time = lyricTimings[index];
-            lyricElement.addEventListener('click', function() {
-                if (index < lyricTimings.length) {
-                    audio.currentTime = lyricTimings[index];
-                }
-            });
-            lyricsContainer.appendChild(lyricElement);
-        });
+    // 格式化时间显示
+    function formatTime(seconds) {
+        if (isNaN(seconds) || seconds === Infinity) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
     }
 
-    // 更新总时间显示
+    // 更新总时间
     function updateTotalTime() {
         if (durationUpdated) return;
-        const duration = audio.duration;
-        if (isNaN(duration) || !isFinite(duration)) return;
+        if (!audio.duration || isNaN(audio.duration) || !isFinite(audio.duration)) return;
 
-        const minutes = Math.floor(duration / 60);
-        const seconds = Math.floor(duration % 60);
-        document.getElementById('total-time').textContent =
-            minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        document.getElementById('total-time').textContent = formatTime(audio.duration);
         durationUpdated = true;
     }
 
-    // 页面加载完成后初始化
-    document.addEventListener('DOMContentLoaded', function() {
-        initLyrics();
-
-        // 创建更多动态鼓楼
-        const backgroundAnimation = document.querySelector('.background-animation');
-        for (let i = 0; i < 4; i++) {
-            const drumTower = document.createElement('div');
-            drumTower.className = 'drum-tower';
-            drumTower.style.animationDelay = (i * 5) + 's';
-            drumTower.style.top = Math.random() * 100 + '%';
-            backgroundAnimation.appendChild(drumTower);
+    // 更新进度条
+    function updateProgress() {
+        if (audio.duration && isFinite(audio.duration)) {
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('progress').style.width = progressPercent + '%';
+            document.getElementById('current-time').textContent = formatTime(audio.currentTime);
         }
-
-        // 监听歌词区域的滚动事件
-        lyricsSection.addEventListener('scroll', handleUserScroll);
-
-        // 移动端触摸事件
-        let startY = 0;
-        let startTime = 0;
-
-        lyricsSection.addEventListener('touchstart', function(e) {
-            isTouching = true;
-            startY = e.touches[0].clientY;
-            startTime = Date.now();
-            isScrolling = true;
-            handleUserScroll();
-        });
-
-        lyricsSection.addEventListener('touchmove', function(e) {
-            if (!isTouching) return;
-            const currentY = e.touches[0].clientY;
-            const deltaY = Math.abs(currentY - startY);
-
-            if (deltaY > 5) {
-                handleUserScroll();
-            }
-        });
-
-        lyricsSection.addEventListener('touchend', function(e) {
-            isTouching = false;
-            setTimeout(() => {
-                isScrolling = false;
-            }, 300);
-        });
-
-        // 添加滚动结束检测
-        let scrollEndTimer;
-        lyricsSection.addEventListener('scroll', function() {
-            clearTimeout(scrollEndTimer);
-            scrollEndTimer = setTimeout(() => {
-                if (!isTouching) {
-                    isScrolling = false;
-                }
-            }, 150);
-        });
-
-        // 移动端触摸优化
-        if ('ontouchstart' in window) {
-            const controlButtons = document.querySelectorAll('.control-button');
-            controlButtons.forEach(button => {
-                button.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.95)';
-                    this.style.background = 'rgba(255, 255, 255, 0.2)';
-                });
-
-                button.addEventListener('touchend', function() {
-                    this.style.transform = '';
-                    this.style.background = '';
-                });
-            });
-        }
-
-        // 音频事件监听
-        audio.addEventListener('loadedmetadata', updateTotalTime);
-
-        // 在用户第一次点击播放时再尝试更新一次
-        document.getElementById('playButton').addEventListener('click', function() {
-            updateTotalTime();
-        }, { once: true });
-
-        // 使用 timeupdate 事件兜底更新
-        audio.addEventListener('timeupdate', function() {
-            updateTotalTime();
-            updateProgress();
-        }, { once: true });
-
-        audio.addEventListener('timeupdate', updateProgress);
-        audio.addEventListener('ended', function() {
-            document.getElementById('playButton').textContent = '▶';
-            albumArt.classList.remove('playing');
-        });
-    });
-
-    function handleUserScroll() {
-        userScrolled = true;
-        autoScrollEnabled = false;
-
-        scrollIndicator.classList.add('show');
-
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-
-        scrollTimeout = setTimeout(function() {
-            userScrolled = false;
-            autoScrollEnabled = true;
-            scrollIndicator.classList.remove('show');
-            scrollToCurrentLyric(true);
-        }, 4000);
     }
 
+    // 播放/暂停切换
     function togglePlay() {
-        const playButton = document.getElementById('playButton');
-
+        const btn = document.getElementById('playButton');
         if (audio.paused) {
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    playButton.textContent = '⏸';
-                    albumArt.classList.add('playing');
-                    updateTotalTime(); // 播放时再次尝试更新总时间
-                }).catch(e => {
-                    console.log("播放被阻止：", e);
-                    playButton.textContent = '▶';
-                    albumArt.classList.remove('playing');
-                });
-            }
+            // 在移动端，首次播放需要用户交互
+            audio.play().then(() => {
+                isPlaying = true;
+                btn.textContent = '⏸';
+                albumArt.classList.add('playing');
+                // 确保获取到duration
+                updateTotalTime();
+            }).catch(error => {
+                console.log('播放失败，需要用户交互:', error);
+            });
         } else {
             audio.pause();
-            playButton.textContent = '▶';
+            isPlaying = false;
+            btn.textContent = '▶';
             albumArt.classList.remove('playing');
         }
     }
 
+    // 快退
     function rewind() {
         audio.currentTime = Math.max(0, audio.currentTime - 5);
     }
 
+    // 快进
     function fastForward() {
-        audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
-    }
-
-    function updateProgress() {
-        const progress = (audio.currentTime / audio.duration) * 100;
-        document.getElementById('progress').style.width = progress + '%';
-
-        const minutes = Math.floor(audio.currentTime / 60);
-        const seconds = Math.floor(audio.currentTime % 60);
-        document.getElementById('current-time').textContent =
-            minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-
-        updateCurrentLyric();
-    }
-
-    function updateCurrentLyric() {
-        const lyricLines = document.querySelectorAll('.lyric-line');
-        let newActiveIndex = -1;
-
-        lyricLines.forEach(line => line.classList.remove('active'));
-
-        for (let i = lyricTimings.length - 1; i >= 0; i--) {
-            if (audio.currentTime >= lyricTimings[i]) {
-                newActiveIndex = i;
-                if (i < lyricLines.length) {
-                    lyricLines[i].classList.add('active');
-                }
-                break;
-            }
-        }
-
-        if (newActiveIndex !== currentLyricIndex && autoScrollEnabled && !isScrolling) {
-            currentLyricIndex = newActiveIndex;
-            scrollToCurrentLyric(false);
+        if (audio.duration && isFinite(audio.duration)) {
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
         }
     }
 
-    function scrollToCurrentLyric(force) {
-        if (!autoScrollEnabled && !force) return;
-        if (isScrolling && !force) return;
-
-        const activeLine = document.querySelector('.lyric-line.active');
-        if (activeLine) {
-            const containerHeight = lyricsSection.clientHeight;
-            const lineTop = activeLine.offsetTop;
-            const lineHeight = activeLine.offsetHeight;
-
-            const targetScroll = lineTop - (containerHeight / 2) + (lineHeight / 2);
-
-            lyricsSection.scrollTo({
-                top: targetScroll,
-                behavior: 'smooth'
-            });
-        }
+    // 拖拽进度条
+    function seekTo(e) {
+        if (!audio.duration || !isFinite(audio.duration)) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = percent * audio.duration;
     }
 
-    function seekTo(event) {
-        const progressBar = event.currentTarget;
-        const rect = progressBar.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const percentage = clickX / rect.width;
-
-        audio.currentTime = percentage * audio.duration;
-    }
-
+    // 返回上一页
     function goBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = '../music.html';
-        }
+        if (window.history.length > 1) window.history.back(); else location.href = '../music.html';
     }
 
-    // 键盘快捷键
-    document.addEventListener('keydown', function(event) {
-        switch(event.code) {
-            case 'Space':
-                event.preventDefault();
-                togglePlay();
-                break;
-            case 'ArrowLeft':
-                rewind();
-                break;
-            case 'ArrowRight':
-                fastForward();
-                break;
-        }
+    // 监听音频事件
+    audio.addEventListener('loadedmetadata', updateTotalTime);
+    audio.addEventListener('canplay', updateTotalTime);
+    audio.addEventListener('timeupdate', () => {
+        updateTotalTime();
+        updateProgress();
+    });
+    audio.addEventListener('ended', () => {
+        document.getElementById('playButton').textContent = '▶';
+        albumArt.classList.remove('playing');
+        isPlaying = false;
     });
 
-    // 移动端屏幕方向变化处理
-    window.addEventListener('orientationchange', function() {
-        setTimeout(function() {
-            if (autoScrollEnabled) {
-                scrollToCurrentLyric(true);
-            }
-        }, 100);
+    // 在页面加载完成后尝试获取音频信息
+    window.addEventListener('load', () => {
+        // 尝试加载音频
+        audio.load();
     });
 
-    // 页面可见性变化处理
-    document.addEventListener('visibilitychange', function() {
-        if (!document.hidden && autoScrollEnabled) {
-            setTimeout(() => {
-                scrollToCurrentLyric(true);
-            }, 100);
+    // 在用户第一次交互后尝试获取音频信息
+    document.addEventListener('touchstart', function firstTouch() {
+        if (!durationUpdated) {
+            audio.load();
+            updateTotalTime();
         }
-    });
+        document.removeEventListener('touchstart', firstTouch);
+    }, { once: true });
+
+    document.addEventListener('click', function firstClick() {
+        if (!durationUpdated) {
+            audio.load();
+            updateTotalTime();
+        }
+        document.removeEventListener('click', firstClick);
+    }, { once: true });
 </script>
 </body>
 </html>
