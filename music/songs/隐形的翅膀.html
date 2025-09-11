@@ -483,14 +483,14 @@
         <div class="player-section">
             <div class="album-art" id="albumArt">
                 <img src="张韶涵.jpg" alt="张韶涵 - 隐形的翅膀" draggable="false"
-                     onerror="this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
+                     onerror="this.src='image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
             </div>
 
 
             <div class="progress-section">
                 <div class="time-info">
                     <span id="current-time">0:00</span>
-                    <span id="total-time">3:44</span>
+                    <span id="total-time">0:00</span>
                 </div>
                 <div class="progress-bar" onclick="seekTo(event)">
                     <div class="progress-fill" id="progress"></div>
@@ -550,6 +550,7 @@
     let autoScrollEnabled = true;
     let isScrolling = false;
     let isTouching = false;
+    let durationUpdated = false;
 
     // 歌词时间轴（秒）
     const lyricTimings = [
@@ -557,6 +558,19 @@
         73.10, 80.10, 86.90, 93.28, 100.15, 133.23, 140.20, 147.00,
         153.00, 160.10, 167.00, 173.20, 180.00, 186.90, 193.90
     ];
+
+    // 更新总时间显示
+    function updateTotalTime() {
+        if (durationUpdated) return;
+        const duration = audio.duration;
+        if (isNaN(duration) || !isFinite(duration)) return;
+
+        const minutes = Math.floor(duration / 60);
+        const seconds = Math.floor(duration % 60);
+        document.getElementById('total-time').textContent =
+            minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        durationUpdated = true;
+    }
 
     // 页面加载完成后初始化
     document.addEventListener('DOMContentLoaded', function() {
@@ -642,13 +656,18 @@
         }
 
         // 音频事件监听
-        audio.addEventListener('loadedmetadata', function() {
-            const duration = audio.duration;
-            const minutes = Math.floor(duration / 60);
-            const seconds = Math.floor(duration % 60);
-            document.getElementById('total-time').textContent =
-                minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-        });
+        audio.addEventListener('loadedmetadata', updateTotalTime);
+
+        // 在用户第一次点击播放时再尝试更新一次
+        document.getElementById('playButton').addEventListener('click', function() {
+            updateTotalTime();
+        }, { once: true });
+
+        // 使用 timeupdate 事件兜底更新
+        audio.addEventListener('timeupdate', function() {
+            updateTotalTime();
+            updateProgress();
+        }, { once: true });
 
         audio.addEventListener('timeupdate', updateProgress);
         audio.addEventListener('ended', function() {
@@ -690,6 +709,7 @@
                 playPromise.then(() => {
                     playButton.textContent = '⏸';
                     albumArt.classList.add('playing');
+                    updateTotalTime(); // 播放时再次尝试更新总时间
                 }).catch(e => {
                     console.log("播放被阻止：", e);
                     playButton.textContent = '▶';
