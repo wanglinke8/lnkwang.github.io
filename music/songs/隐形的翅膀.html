@@ -947,15 +947,6 @@
     // 下载歌曲函数
     function downloadSong() {
         hideDownloadModal();
-
-        // 显示下载中提示
-        // alert('开始下载《隐形的翅膀》臻品音质版本...');
-
-        // 这里应该是实际的下载逻辑
-        // 由于浏览器安全限制，前端无法直接下载服务器文件
-        // 实际项目中需要通过以下方式之一实现：
-
-        // 方式1: 如果文件在同域下，可以直接创建下载链接
         const downloadUrl = '隐形的翅膀.wav'; // 实际文件路径
         const link = document.createElement('a');
         link.href = downloadUrl;

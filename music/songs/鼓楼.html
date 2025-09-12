@@ -618,7 +618,7 @@
         <div class="player-section">
             <div class="album-art" id="albumArt">
                 <img src="鼓楼.jpg" alt="赵雷 - 鼓楼" draggable="false"
-                     onerror="this.src='image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
+                     onerror="this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22250%22 viewBox=%220 0 250 250%22%3E%3Ccircle cx=%22125%22 cy=%22125%22 r=%22100%22 fill=%22%23ff6b6b%22/%3E%3C/svg%3E'">
             </div>
 
             <div class="progress-section">
@@ -983,19 +983,21 @@
         document.getElementById('downloadModal').style.display = 'none';
     }
 
-    // 下载歌曲函数
+    // 下载歌曲函数 - 修复移动端下载问题
     function downloadSong() {
         hideDownloadModal();
 
-
-
-        const downloadUrl = '赵雷-鼓楼.wav'; // 实际文件路径
+        // 创建一个临时的 <a> 元素
         const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = '赵雷-鼓楼.wav';
+        link.href = '赵雷-鼓楼.wav';  // 确保这是正确的相对路径或绝对路径
+        link.download = '赵雷-鼓楼.wav';  // 指定下载文件名
         link.style.display = 'none';
+
+        // 添加到页面并触发点击
         document.body.appendChild(link);
         link.click();
+
+        // 清理 DOM
         document.body.removeChild(link);
     }
 
