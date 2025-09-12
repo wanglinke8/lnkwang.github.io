@@ -280,6 +280,30 @@
             transform: scale(0.95);
         }
 
+        /* 新增下载按钮样式 */
+        .download-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        .download-button:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+        }
+
         .lyrics-section {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
@@ -362,6 +386,74 @@
             opacity: 1;
         }
 
+        /* 下载确认弹窗样式 */
+        .download-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .modal-message {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .confirm-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .cancel-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .modal-button:active {
+            transform: scale(0.95);
+        }
+
         /* 平板适配 */
         @media (min-width: 768px) {
             .main-content {
@@ -406,6 +498,12 @@
                 font-size: 2rem;
             }
 
+            .download-button {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
             .lyrics-section {
                 height: fit-content;
                 max-height: 70vh;
@@ -423,6 +521,18 @@
 
             .lyric-line.active::before {
                 left: -10px;
+            }
+
+            .modal-content {
+                padding: 40px;
+            }
+
+            .modal-title {
+                font-size: 1.8rem;
+            }
+
+            .modal-message {
+                font-size: 1.2rem;
             }
         }
 
@@ -501,6 +611,7 @@
                 <button class="control-button" onclick="rewind()">⏪</button>
                 <button class="control-button play-button" id="playButton" onclick="togglePlay()">▶</button>
                 <button class="control-button" onclick="fastForward()">⏩</button>
+                <button class="download-button" onclick="showDownloadModal()">⬇️</button>
             </div>
         </div>
 
@@ -534,6 +645,18 @@
                 <div class="lyric-line">隐形的翅膀 让梦恒久比天长</div>
                 <div class="lyric-line">留一个愿望 让自己想像</div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- 下载确认弹窗 -->
+<div class="download-modal" id="downloadModal">
+    <div class="modal-content">
+        <h2 class="modal-title">下载</h2>
+        <p class="modal-message">是否下载《隐形的翅膀》？<br>文件大小：约 37MB</p>
+        <div class="modal-buttons">
+            <button class="modal-button cancel-button" onclick="hideDownloadModal()">取消</button>
+            <button class="modal-button confirm-button" onclick="downloadSong()">下载</button>
         </div>
     </div>
 </div>
@@ -642,7 +765,7 @@
 
         // 移动端触摸优化
         if ('ontouchstart' in window) {
-            const controlButtons = document.querySelectorAll('.control-button');
+            const controlButtons = document.querySelectorAll('.control-button, .download-button');
             controlButtons.forEach(button => {
                 button.addEventListener('touchstart', function() {
                     this.style.transform = 'scale(0.95)';
@@ -774,9 +897,9 @@
         }
     }
 
-    function scrollToCurrentLyric(force) {
-        if (!autoScrollEnabled && !force) return;
-        if (isScrolling && !force) return; // 如果用户正在滚动，不自动滚动
+    function scrollToCurrentLyric() {
+        if (!autoScrollEnabled) return;
+        if (isScrolling) return; // 如果用户正在滚动，不自动滚动
 
         const activeLine = document.querySelector('.lyric-line.active');
         if (activeLine) {
@@ -811,8 +934,73 @@
         }
     }
 
+    // 显示下载确认弹窗
+    function showDownloadModal() {
+        document.getElementById('downloadModal').style.display = 'flex';
+    }
+
+    // 隐藏下载确认弹窗
+    function hideDownloadModal() {
+        document.getElementById('downloadModal').style.display = 'none';
+    }
+
+    // 下载歌曲函数
+    function downloadSong() {
+        hideDownloadModal();
+
+        // 显示下载中提示
+        // alert('开始下载《隐形的翅膀》臻品音质版本...');
+
+        // 这里应该是实际的下载逻辑
+        // 由于浏览器安全限制，前端无法直接下载服务器文件
+        // 实际项目中需要通过以下方式之一实现：
+
+        // 方式1: 如果文件在同域下，可以直接创建下载链接
+        const downloadUrl = '隐形的翅膀.wav'; // 实际文件路径
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '隐形的翅膀.wav';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // 方式2: 如果需要后端处理，可以发送请求
+        // fetch('/api/download/song', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         song: '隐形的翅膀',
+        //         quality: 'high'
+        //     })
+        // })
+        // .then(response => response.blob())
+        // .then(blob => {
+        //     const url = window.URL.createObjectURL(blob);
+        //     const link = document.createElement('a');
+        //     link.href = url;
+        //     link.download = '隐形的翅膀_臻品音质.wav';
+        //     link.click();
+        //     window.URL.revokeObjectURL(url);
+        // });
+    }
+
+    // 点击弹窗背景关闭弹窗
+    document.getElementById('downloadModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideDownloadModal();
+        }
+    });
+
     // 键盘快捷键
     document.addEventListener('keydown', function(event) {
+        // ESC键关闭弹窗
+        if (event.key === 'Escape') {
+            hideDownloadModal();
+        }
+
         switch(event.code) {
             case 'Space':
                 event.preventDefault();
