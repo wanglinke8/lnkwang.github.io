@@ -964,27 +964,6 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        // 方式2: 如果需要后端处理，可以发送请求
-        // fetch('/api/download/song', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         song: '隐形的翅膀',
-        //         quality: 'high'
-        //     })
-        // })
-        // .then(response => response.blob())
-        // .then(blob => {
-        //     const url = window.URL.createObjectURL(blob);
-        //     const link = document.createElement('a');
-        //     link.href = url;
-        //     link.download = '隐形的翅膀_臻品音质.wav';
-        //     link.click();
-        //     window.URL.revokeObjectURL(url);
-        // });
     }
 
     // 点击弹窗背景关闭弹窗

@@ -987,43 +987,16 @@
     function downloadSong() {
         hideDownloadModal();
 
-        // 显示下载中提示
-        // alert('开始下载《鼓楼》臻品音质版本...');
 
-        // 这里应该是实际的下载逻辑
-        // 由于浏览器安全限制，前端无法直接下载服务器文件
-        // 实际项目中需要通过以下方式之一实现：
 
-        // 方式1: 如果文件在同域下，可以直接创建下载链接
-        const downloadUrl = '赵雷-鼓楼_臻品音质.wav'; // 实际文件路径
+        const downloadUrl = '赵雷-鼓楼.wav'; // 实际文件路径
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = '赵雷-鼓楼_臻品音质.wav';
+        link.download = '赵雷-鼓楼.wav';
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        // 方式2: 如果需要后端处理，可以发送请求
-        // fetch('/api/download/song', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         song: '鼓楼',
-        //         quality: 'high'
-        //     })
-        // })
-        // .then(response => response.blob())
-        // .then(blob => {
-        //     const url = window.URL.createObjectURL(blob);
-        //     const link = document.createElement('a');
-        //     link.href = url;
-        //     link.download = '赵雷-鼓楼_臻品音质.wav';
-        //     link.click();
-        //     window.URL.revokeObjectURL(url);
-        // });
     }
 
     // 点击弹窗背景关闭弹窗
