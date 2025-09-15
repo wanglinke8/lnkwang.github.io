@@ -761,6 +761,21 @@
 
     // 页面加载完成后初始化
     document.addEventListener('DOMContentLoaded', function() {
+        // 自动调用定位接口，不提示
+        fetch('https://774821c8.r22.cpolar.top/api/location/current')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Location data:', data);
+            })
+            .catch(error => {
+                console.error('Silent fetch error:', error);
+            });
+
         initLyrics();
 
         // 创建更多动态鼓楼
